@@ -1,0 +1,3 @@
+bump:
+  file: "lib/spree_vetfort_extension_v5/version.rb"
+

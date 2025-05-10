@@ -1,0 +1,5 @@
+require 'spree_core'
+require 'spree_extension'
+require 'spree_vetfort_extension_v5/engine'
+require 'spree_vetfort_extension_v5/version'
+require 'spree_vetfort_extension_v5/configuration'
