@@ -25,9 +25,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'spree_admin', '>= 5.0.3'
   s.add_dependency 'spree_extension'
 
-  s.add_dependency 'ahoy_matey'
   s.add_dependency 'mjml-rails'
   s.add_dependency 'mrml'
+
+  s.add_dependency 'ahoy_matey'
+  s.add_dependency 'browser'
+  s.add_dependency 'geocoder', '~> 1.8'
 
   s.add_development_dependency 'spree_dev_tools'
 end
