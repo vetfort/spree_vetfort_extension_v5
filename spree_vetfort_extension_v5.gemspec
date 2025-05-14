@@ -32,5 +32,13 @@ Gem::Specification.new do |s|
   s.add_dependency 'browser'
   s.add_dependency 'geocoder', '~> 1.8'
 
+  s.add_dependency 'dry-validation'
+  s.add_dependency 'dry-monads'
+  s.add_dependency 'dry-struct'
+  s.add_dependency 'dry-system'
+  s.add_dependency 'rainbow'
+  s.add_dependency 'httparty'
+  s.add_dependency 'view_component'
+
   s.add_development_dependency 'spree_dev_tools'
 end

@@ -1,0 +1,32 @@
+<div class="min-h-screen flex items-center justify-center bg-[#f8f9fa] bg-[radial-gradient(circle,#ffe000_0%,#f49c32_100%)]">
+  <main class="mt-20 py-4 flex justify-center w-full">
+    <div class="max-w-[28rem] w-full p-4 rounded-lg bg-transparent">
+      <div class="flex justify-center">
+        <%= image_tag logo_image_url, alt: 'Logo', class: "h-20 w-auto" %>
+      </div>
+      <div class="flex justify-center mb-4 text-xl">
+        VetFort Shop
+      </div>
+      <h1 class="font-bold text-2xl mb-4 text-center">
+        Наши социальные сети
+      </h1>
+      <div class="grid gap-4">
+        <a class="flex items-center bg-white font-bold py-3 px-4 rounded-full text-center no-underline text-black shadow-sm hover:shadow-md transition-shadow"
+           href=<%= vetfort_link %> target="_blank">
+          <%= image_tag tiktok_image_url, alt: 'tiktok', class: "h-9 w-auto mr-4" %>
+          В Магазин
+        </a>
+        <a class="flex items-center bg-white font-bold py-3 px-4 rounded-full text-center no-underline text-black shadow-sm hover:shadow-md transition-shadow"
+           href=<%= instagram_link %> target="_blank">
+          <%= image_tag instagram_image_url, alt: 'instagram', class: "h-9 w-auto mr-4" %>
+          Instagram
+        </a>
+        <a class="flex items-center bg-white font-bold py-3 px-4 rounded-full text-center no-underline text-black shadow-sm hover:shadow-md transition-shadow"
+           href=<%= tiktok_link %> target="_blank">
+          <%= image_tag tiktok_image_url, alt: 'tiktok', class: "h-9 w-auto mr-4" %>
+          TikTok
+        </a>
+      </div>
+    </div>
+  </main>
+</div>

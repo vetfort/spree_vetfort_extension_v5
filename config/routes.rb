@@ -1,3 +1,3 @@
 Spree::Core::Engine.add_routes do
-  # Add your extension routes here
+  resources :links, only: [:index], controller: 'spree_vetfort_extension_v5/links'
 end
