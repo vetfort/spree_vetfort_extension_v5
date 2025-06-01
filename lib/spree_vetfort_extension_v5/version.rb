@@ -1,5 +1,5 @@
 module SpreeVetfortExtensionV5
-  VERSION = '0.2.4'.freeze
+  VERSION = '0.2.5'.freeze
 
   def gem_version
     Gem::Version.new(VERSION)

@@ -1,0 +1,73 @@
+<%= javascript_importmap_tags %>
+
+<% @body_id = 'checkout-page' %>
+
+<%
+content_for :head do
+  agent = request.env['HTTP_USER_AGENT']
+  if agent =~ /Safari/ && !(agent =~ /Chrome/)
+%>
+  <script>
+    if (!!window.performance && window.performance.navigation.type === 2) {
+      window.location.reload();
+    }
+    window.onpageshow = function(event) {
+      if (event.persisted) {
+        window.location.reload()
+      }
+    }
+  </script>
+<%
+  end
+end
+%>
+
+<div id="checkout" class="container checkout" data-hook>
+  <%= render partial: 'spree/shared/error_messages', locals: { target: @order } %>
+
+  <div class="row align-items-center flex-column checkout-header" data-hook="checkout_header">
+    <div class="text-uppercase checkout-header-title">
+      <h1 data-hook="checkout_title"><%= Spree.t('checkout_page.header') %></h1>
+    </div>
+    <div class="checkout-progress" data-hook="checkout_progress" role="navigation" aria-label="<%= Spree.t('checkout_page.checkout_navigation') %>">
+      <%= checkout_progress %>
+    </div>
+  </div>
+
+
+  <div class="row checkout-content" data-hook="checkout_content">
+    <div class="col-md-12 d-flex flex-column align-items-end" data-controller="checkout">
+
+      <%= form_tag @redirect_attrs.paynet_submit_form_url, method: :post do %>
+        <!-- Hidden fields -->
+        <%= hidden_field_tag :operation, @redirect_attrs.operation %>
+        <%= hidden_field_tag :LinkUrlSucces, @redirect_attrs.link_url_succes %>
+        <%= hidden_field_tag :LinkUrlCancel, @redirect_attrs.link_url_cancel %>
+        <%= hidden_field_tag :ExpiryDate, @redirect_attrs.expiry_date %>
+        <%= hidden_field_tag :Signature, @redirect_attrs.signature %>
+        <%= hidden_field_tag :Lang, @redirect_attrs.lang %>
+
+        <!-- Submit button -->
+        <%= submit_tag Spree.t('checkout_page.pay'), id: "button-confirm", data: { loading_text: "", checkout_target: "button" }, class: "btn btn-primary w-100 primary", disabled: true %>
+
+        <div class="form-check mb-3 mt-3 justify-content-center">
+          <!-- Checkbox right above the button -->
+          <input class="form-check-input" type="checkbox" id="terms-checkbox" data-checkout-target="checkbox" data-action="change->checkout#toggleButton">
+          <label class="form-check-label" for="terms-checkbox">
+            <%= Spree.t('checkout_page.accept_terms') %>
+            <a href="https://vetfort.md/pages/terms-and-conditions" style="color: #3598db;" target="_blank"><%= Spree.t('checkout_page.conditions') %></a>
+            <%= Spree.t('checkout_page.and') %>
+            <a href="https://vetfort.md/pages/privacy-policy" style="color: #3598db;" target="_blank"><%= Spree.t('checkout_page.terms') %></a>
+          </label>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', function() {
+    Spree.current_order_id = "<%= @order.number %>"
+    Spree.current_order_token = "<%= @order.token %>"
+  })
+</script>
