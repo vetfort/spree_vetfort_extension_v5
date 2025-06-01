@@ -1,0 +1,8 @@
+<%= form_tag redirect_attrs.paynet_submit_form_url, method: :post, data: { controller: "auto-submit" } do %>
+  <%= hidden_field_tag :operation, redirect_attrs.operation %>
+  <%= hidden_field_tag :LinkUrlSucces, redirect_attrs.link_url_succes %>
+  <%= hidden_field_tag :LinkUrlCancel, redirect_attrs.link_url_cancel %>
+  <%= hidden_field_tag :ExpiryDate, redirect_attrs.expiry_date %>
+  <%= hidden_field_tag :Signature, redirect_attrs.signature %>
+  <%= hidden_field_tag :Lang, redirect_attrs.lang %>
+<% end %>

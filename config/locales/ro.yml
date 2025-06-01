@@ -1,0 +1,15 @@
+ro:
+  spree:
+    terms_of_service: "Termeni și condiții"
+    privacy_policy: "Politica de confidențialitate"
+    storefront:
+      checkout:
+        accept_terms: "Prin plasarea comenzii, sunt de acord cu"
+      payment:
+        ok:
+          thank_you: "Vă mulțumim pentru comanda!"
+          order: "Comanda dumneavoastră a fost procesată cu succes."
+          we_will_contact_you: "Vă vom contacta în cel mai scurt timp posibil."
+        cancel:
+          sorry: "Ne pare rău!"
+          failed: "Comanda dumneavoastră nu a fost procesată."

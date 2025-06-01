@@ -1,0 +1,15 @@
+ru:
+  spree:
+    terms_of_service: "Условия использования"
+    privacy_policy: "Политика конфиденциальности"
+    storefront:
+      checkout:
+        accept_terms: "Я согласен и подтверждаю, что ознакомился с"
+      payment:
+        ok:
+          thank_you: "Спасибо за покупку!"
+          order: "Ваш заказ успешно обработан."
+          we_will_contact_you: "Мы свяжемся с вами в ближайшее время."
+        cancel:
+          sorry: "Очень жаль!"
+          failed: "Ваш заказ не был обработан."
