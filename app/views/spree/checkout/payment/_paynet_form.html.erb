@@ -1,4 +1,4 @@
-<%= form_tag redirect_attrs.paynet_submit_form_url, method: :post, data: { controller: "auto-submit" } do %>
+<%= form_tag redirect_attrs.paynet_submit_form_url, method: :post, data: { controller: "paynet-auto-submit" } do %>
   <%= hidden_field_tag :operation, redirect_attrs.operation %>
   <%= hidden_field_tag :LinkUrlSucces, redirect_attrs.link_url_succes %>
   <%= hidden_field_tag :LinkUrlCancel, redirect_attrs.link_url_cancel %>
