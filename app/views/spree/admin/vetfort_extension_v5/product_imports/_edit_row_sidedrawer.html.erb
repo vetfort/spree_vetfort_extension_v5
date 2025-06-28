@@ -1,0 +1,19 @@
+<aside
+  data-controller="product-import"
+  data-product-import-target="editRowPanel"
+  class="position-fixed top-0 right-0 h-100 bg-white border-start p-4 shadow"
+  style="width: 320px; transition: transform 0.3s ease; z-index: 1050; transform: translateX(100%);"
+>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Редактировать поле</h5>
+    <button type="button" class="btn-close" data-action="product-import#closeEditRowPanel"></button>
+  </div>
+  <div data-product-import-target="editRowContent">
+    <!-- сюда рендерим динамический контент -->
+  </div>
+</aside>
+
+<div data-product-import-target="editRowBackdrop"
+    data-action="click->product-import#toggleEditRowPanel"
+    class="position-fixed top-0 start-0 w-100 h-100 d-none"
+    style="z-index: 1040;background-color: rgba(0, 0, 0, 0.25);"></div>

@@ -22,6 +22,23 @@ Spree::Core::Engine.add_routes do
     end
   end
 
+  namespace :admin do
+    namespace :vetfort_extension_v5 do
+      resources :product_imports, only: %i[index show new edit create update] do
+        collection do
+          get :template
+        end
+        member do
+          post :import
+          patch :remap_column
+          patch :update_common
+        end
+
+        resources :product_import_rows, only: %i[update]
+      end
+    end
+  end
+
   get '/checkout/update/:state', to: redirect { |params, request|
     "/checkout/payment?state=#{params[:state]}"
   }

@@ -1,0 +1,76 @@
+<%= turbo_frame_tag "product-import-head" do %>
+  <div class="table-responsive">
+    <table class="table table-bordered table-sm">
+      <thead>
+        <tr>
+          <% import.field_mapping.each do |raw_col, mapped_col| %>
+            <th>
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <%= raw_col %><br>
+
+                  <%= form_with url: remap_column_admin_vetfort_extension_v5_product_import_path(import),
+                                method: :patch,
+                                data: { turbo_frame: "product-import-head" },
+                                class: "d-inline" do %>
+
+                    <%= hidden_field_tag :field, raw_col %>
+                    <%= help_bubble('Выберите поле, которое соответствует этой колонке.
+                                    Например, если колонка содержит цены — выберите Price.
+                                    Если оставить пустым, колонка будет проигнорирована при импорте.') %>
+                    <%= select_tag :value,
+                        options_for_select(
+                          [["-- выберите поле --", ""]] +
+                            (Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS - import.field_mapping.values).map { |f| [f.humanize, f] } +
+                            [[mapped_col.humanize, mapped_col]].uniq,
+                          selected: mapped_col.presence
+                        ),
+                        class: 'form-select form-select-sm mt-1',
+                        onchange: "this.form.requestSubmit()" %>
+                  <% end %>
+                </div>
+
+                <button type="button" class="btn-close btn-sm"
+                        data-action="click->product-import#removeColumn"
+                        data-field="<%= raw_col %>"></button>
+              </div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% import.product_import_rows.each do |row| %>
+          <tr data-index="<%= row.id %>">
+            <% import.field_mapping.each_key do |col| %>
+              <td>
+                <% field_type = import.field_mapping[col] %>
+
+                <% if field_type == 'taxons' %>
+                  <div class="d-flex align-items-center">
+                    <span class="form-control form-control-sm" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= row.raw_data[col] %></span>
+                    <%= button_tag type: :button,
+                        class: 'btn btn-sm btn-outline',
+                        data: {
+                          action: 'click->product-import#openEditor',
+                          'product-import-row-path-value': spree.admin_vetfort_extension_v5_product_import_product_import_row_path(import, row),
+                          'product-import-field-value': col
+                        } do %>
+                      ✏️
+                    <% end %>
+                  </div>
+                <% else %>
+                    <input value="<%= row.raw_data[col] %>"
+                      class="form-control form-control-sm"
+                      data-field="<%= col %>"
+                      data-index="<%= row.id %>"
+                      data-action="change->product-import#updateRow">
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
