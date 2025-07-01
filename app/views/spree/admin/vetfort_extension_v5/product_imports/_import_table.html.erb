@@ -29,10 +29,6 @@
                         onchange: "this.form.requestSubmit()" %>
                   <% end %>
                 </div>
-
-                <button type="button" class="btn-close btn-sm"
-                        data-action="click->product-import#removeColumn"
-                        data-field="<%= raw_col %>"></button>
               </div>
             </th>
           <% end %>
@@ -41,23 +37,17 @@
 
       <tbody>
         <% import.product_import_rows.each do |row| %>
-          <tr data-index="<%= row.id %>">
-            <% import.field_mapping.each_key do |col| %>
+          <tr>
+            <% import.field_mapping.each_value do |col| %>
+
               <td>
                 <% field_type = import.field_mapping[col] %>
 
                 <% if field_type == 'taxons' %>
                   <div class="d-flex align-items-center">
                     <span class="form-control form-control-sm" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= row.raw_data[col] %></span>
-                    <%= button_tag type: :button,
-                        class: 'btn btn-sm btn-outline',
-                        data: {
-                          action: 'click->product-import#openEditor',
-                          'product-import-row-path-value': spree.admin_vetfort_extension_v5_product_import_product_import_row_path(import, row),
-                          'product-import-field-value': col
-                        } do %>
-                      ✏️
-                    <% end %>
+
+                    <%= render 'edit_row_sidedrawer', import: import, row: row, col: col %>
                   </div>
                 <% else %>
                     <input value="<%= row.raw_data[col] %>"

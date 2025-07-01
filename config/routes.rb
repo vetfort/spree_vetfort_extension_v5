@@ -32,6 +32,8 @@ Spree::Core::Engine.add_routes do
           post :import
           patch :remap_column
           patch :update_common
+          patch :manage_columns
+          patch :remove_column
         end
 
         resources :product_import_rows, only: %i[update]

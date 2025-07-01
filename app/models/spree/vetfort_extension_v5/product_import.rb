@@ -11,7 +11,7 @@ class Spree::VetfortExtensionV5::ProductImport < ApplicationRecord
     taxons
     options
     properties
-    pula
+    description
   ]
 
   belongs_to :user, class_name: 'Spree::User'

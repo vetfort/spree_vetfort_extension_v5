@@ -1,0 +1,42 @@
+<%= turbo_frame_tag "product-import-columns-settings" do %>
+  <div data-product-import-target="backdrop"
+      data-action="click->product-import#toggleColumnPanel"
+      class="vetfort-backdrop d-none"></div>
+
+  <aside data-product-import-target="columnPanel"
+        class="vetfort-sidedrawer position-fixed top-0 right-0 h-100 bg-white border-start p-4 shadow"
+  >
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">Добавить колонку</h5>
+      <button type="button" class="btn-close"
+              data-action="click->product-import#toggleColumnPanel"
+              aria-label="Close"></button>
+    </div>
+
+    <% available_fields = Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS - @import.field_mapping.values %>
+    <% available_fields.each do |field| %>
+      <%= form_with url: remap_column_admin_vetfort_extension_v5_product_import_path(@import), method: :patch, data: { turbo_frame: "product-import-columns-settings" }, class: "mb-2" do %>
+        <%= hidden_field_tag :field, field %>
+        <%= hidden_field_tag :value, field %>
+
+        <button class="btn btn-outline-primary btn-sm w-100 text-start" type="submit">
+          ➕ <%= field.humanize %>
+        </button>
+      <% end %>
+    <% end %>
+
+    <% @import.field_mapping.each do |csv_header, field| %>
+      <% if Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS.include?(field) %>
+        <div class="d-flex align-items-center mb-2">
+          <button class="btn btn-outline-primary btn-sm w-100 text-start me-2" disabled>
+            <%= field.humanize %>
+          </button>
+          <%= form_with url: remove_column_admin_vetfort_extension_v5_product_import_path(@import), method: :patch, data: { turbo_frame: "product-import-columns-settings" } do %>
+            <%= hidden_field_tag :field, field %>
+            <button class="btn btn-outline-danger btn-sm" type="submit">✖</button>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </aside>
+<% end %>

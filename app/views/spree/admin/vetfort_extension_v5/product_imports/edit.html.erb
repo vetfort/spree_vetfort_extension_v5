@@ -1,7 +1,6 @@
-<%# <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> %>
-
 <%= turbo_frame_tag "product-import-editor" do %>
   <div data-controller="product-import"
+       data-product-import-manage-columns-path-value="<%= spree.manage_columns_admin_vetfort_extension_v5_product_import_path(@import) %>"
        data-product-import-import-id-value="<%= @import.id %>">
 
     <div class="d-flex justify-content-between align-items-center mb-3  mt-4">
@@ -13,45 +12,9 @@
           data: { turbo_confirm: 'Точно начать импорт?' } %>
     </div>
 
-    <%= render 'columns_settings', import: @import %>
-
-    <div class="card mb-4 p-3 bg-light">
-      <div class="d-flex justify-content-start align-items-center gap-2">
-        <p class="mb-0">Общие значения</p>
-        <%= help_bubble('В этом разделе можно указать общие значения для всех импортируемых товаров.
-                        Например, таксоны, категории, бренды и т.д.') %>
-      </div>
-
-      <div class="row g-2">
-        <div class="col-md-6">
-          <%= label_tag :common_taxons, 'Таксоны' %>
-
-          <%= form_with url: update_common_admin_vetfort_extension_v5_product_import_path(@import),
-              method: :patch,
-              data: { product_import_target: "commonTaxonsForm" },
-              class: "mb-3" do %>
-
-            <%= tom_select_tag 'common[taxons]',
-              multiple: true,
-              active_option: @import.common_values['taxons'],
-              url: spree.admin_taxons_select_options_path(format: :json),
-              class: 'w-100'
-            %>
-          <% end %>
-        </div>
-      </div>
-    </div>
-
-
-
-
-    <div class="d-flex justify-content-end align-items-center mb-3">
-      <button type="button" class="btn btn-outline btn-sm" data-action="product-import#toggleColumnPanel">
-        <%= icon('columns-3') %>
-      </button>
-    </div>
-
+    <%= render 'common_attributes', import: @import %>
+    <%= render 'table_controls', import: @import %>
     <%= render 'import_table', import: @import %>
-    <%= render 'edit_row_sidedrawer' %>
+    <%= render 'edit_columns_settings_sidedrawer', import: @import %>
   </div>
 <% end %>

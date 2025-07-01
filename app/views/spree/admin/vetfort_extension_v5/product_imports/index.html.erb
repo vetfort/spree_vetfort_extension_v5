@@ -25,16 +25,35 @@
   </div>
 </div>
 
-<style>
-  .btn-gradient-primary {
-    background: linear-gradient(45deg,rgb(25, 102, 183),rgb(167, 2, 142));
-    border: none;
-    color: white;
-  }
-  .custom-file-input ~ .custom-file-label::after {
-    content: "<%= Spree.t('admin.spree_vetfort.import.browse') %>";
-  }
-</style>
+<%# table with imports %>
+<div class="row">
+  <div class="col-12">
+    <div class="card shadow-sm rounded">
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @imports.each do |import| %>
+              <tr>
+                <td><%= import.id %></td>
+                <td><%= import.status %></td>
+                <td>
+                  <%= link_to 'Edit', edit_admin_vetfort_extension_v5_product_import_path(import), class: 'btn btn-primary' %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
   document.getElementById('fileInput').addEventListener('change', function(event) {
