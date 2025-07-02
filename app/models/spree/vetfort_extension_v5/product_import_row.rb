@@ -28,4 +28,14 @@ class Spree::VetfortExtensionV5::ProductImportRow < ApplicationRecord
       transitions from: %i[pending skipped], to: :failed
     end
   end
+
+  def taxons_names
+    return raw_data['taxons'] unless processed_data['taxons'].present?
+
+    taxons = Spree::Taxon.where(id: processed_data['taxons'])
+
+    return if taxons.blank?
+
+    taxons.pluck(:pretty_name).join(', ')
+  end
 end

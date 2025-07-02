@@ -1,38 +1,58 @@
-<div
-  class="d-flex align-items-center"
-  data-controller="product-import-row"
-  id="edit-row-sidedrawer-<%= row.id %>"
->
-  <%= button_tag type: :button,
-      class: 'btn btn-sm btn-outline',
-      data: {
-        action: 'click->product-import-row#toggleDrawer',
-        'product-import-row-field-value': col
-      } do %>
-    ✏️
-  <% end %>
-
+<%= turbo_frame_tag "edit-row-sidedrawer-#{row.id}" do %>
   <div
-    data-product-import-row-target="backdrop"
-    data-action="click->product-import-row#toggleDrawer"
-    class="vetfort-backdrop d-none"
-  ></div>
-
-  <aside
-    data-product-import-row-target="drawer"
-    class="vetfort-sidedrawer vetfort-sidedrawer-large position-fixed top-0 right-0 h-100 bg-white border-start p-4 shadow"
+    class="d-flex align-items-center"
+    data-controller="product-import-row"
+    id="edit-row-sidedrawer-<%= row.id %>"
   >
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0">Редактировать поле</h5>
-      <button type="button" class="btn-close" data-action="product-import-row#closeDrawer"></button>
-    </div>
-    <div data-product-import-row-target="content">
-      <%= form_with url: spree.admin_vetfort_extension_v5_product_import_product_import_row_path(import, row),
-          method: :patch,
-          data: { product_import_target: "rowForm" },
-          class: "mb-3" do %>
+    <%= button_tag type: :button,
+        class: 'btn btn-sm btn-outline',
+        data: {
+          action: 'click->product-import-row#openDrawer',
+          'product-import-row-field-value': col
+        } do %>
+      ✏️
+    <% end %>
 
-      <% end %>
-    </div>
-  </aside>
-</div>
+    <div
+      data-product-import-row-target="backdrop"
+      data-action="click->product-import-row#closeDrawer"
+      class="vetfort-backdrop d-none"
+    ></div>
+
+    <aside
+      data-product-import-row-target="drawer"
+      class="vetfort-sidedrawer vetfort-sidedrawer-large position-fixed top-0 right-0 h-100 bg-white border-start p-4 shadow"
+    >
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Редактировать поле</h5>
+        <button type="button" class="btn-close" data-action="product-import-row#closeDrawer"></button>
+      </div>
+      <div class="card mb-4 p-3 bg-light">
+        <div class="d-flex justify-content-start align-items-center gap-2">
+          <pre><%= JSON.pretty_generate(row.processed_data) %></pre>
+        </div>
+      </div>
+
+      <div data-product-import-row-target="content">
+
+        <label for="product_import_row[taxons]">Таксоны</label>
+
+        <%= form_with url: spree.admin_vetfort_extension_v5_product_import_product_import_row_path(import, row),
+            method: :patch,
+            data: { product_import_row_target: "rowTaxonsForm" },
+            class: "mb-3" do %>
+
+            <%= tom_select_tag 'product_import_row[taxons]',
+              multiple: true,
+              active_option: row.processed_data['taxons'],
+              url: spree.admin_taxons_select_options_path(format: :json),
+              class: 'w-100',
+              select_data: {
+                'product-import-row-target': 'rowTaxonsSelect'
+              }
+            %>
+        <% end %>
+      </div>
+    </aside>
+  </div>
+<% end %>

@@ -31,6 +31,12 @@ module SpreeVetfortExtensionV5
         'spree/admin/shared/sidebar/vetfort_import_nav_item'
     end
 
+    # initializer 'spree_vetfort_extension_v5.helpers' do |app|
+    #   ActiveSupport.on_load(:action_controller) do
+    #     app.helpers.include SpreeVetfortExtensionV5::ProductImportsHelper
+    #   end
+    # end
+
     # config.after_initialize do
     #   # Rails.application.config.spree_admin.head_partials = []
     #   # Rails.application.config.spree_admin.body_start_partials = []

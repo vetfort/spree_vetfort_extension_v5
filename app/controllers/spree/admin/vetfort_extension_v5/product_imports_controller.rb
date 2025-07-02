@@ -2,7 +2,6 @@ module Spree
   module Admin
     module VetfortExtensionV5
       class ProductImportsController < Spree::Admin::BaseController
-
         before_action :set_product_import, only: [:edit, :update, :update_common, :manage_columns]
 
         def index
@@ -24,18 +23,18 @@ module Spree
           end
 
           csv_data = parse_csv(import_params[:file])
-          valid_fields = Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS.map(&:to_s)
-          field_mapping = csv_data.headers.to_h do |header|
-            canonical = valid_fields.find { |f| f.downcase == header.to_s.downcase }
-            [header, canonical] if canonical
-          end.compact
-
           initial_csv_headers = csv_data.headers
 
           if csv_data.empty?
             flash[:error] = Spree.t('admin.spree_vetfort.import.empty_file')
             redirect_to admin_vetfort_extension_v5_product_imports_path and return
           end
+
+          valid_fields = Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS.map(&:to_s)
+          field_mapping = csv_data.headers.to_h do |header|
+            canonical = valid_fields.find { |f| f.downcase == header.to_s.downcase }
+            [header, canonical] if canonical
+          end.compact
 
           import = Spree::VetfortExtensionV5::ProductImport.new(
             user: current_user,
@@ -47,15 +46,19 @@ module Spree
             import.save!
 
             csv_data.each do |row|
+              raw_data = row.to_h.transform_keys(&:to_s)
+              processed_data = Mapper.new(raw_data:, field_mapping:).call
+
               import.product_import_rows.create!(
-                raw_data: row.to_h.transform_keys { |key| key.to_s.downcase }.compact
+                raw_data: raw_data,
+                processed_data: processed_data
               )
             end
           end
 
-          # import = Spree::VetfortExtensionV5::ProductImport.last
           redirect_to edit_admin_vetfort_extension_v5_product_import_path(import)
         end
+
 
         def edit
           @import = Spree::VetfortExtensionV5::ProductImport.includes(:product_import_rows).find(params[:id])
@@ -68,11 +71,22 @@ module Spree
         end
 
         def remap_column
+
           @import = Spree::VetfortExtensionV5::ProductImport.includes(:product_import_rows).find(params[:id])
 
           field_mapping = @import.field_mapping || {}
           field_mapping[params[:field]] = params[:value].presence
           @import.update!(field_mapping: field_mapping)
+
+          @import.product_import_rows.find_each do |row|
+            row.update!(
+              processed_data: Mapper.new(
+                raw_data: row.raw_data,
+                field_mapping: @import.field_mapping,
+                previous_processed_data: row.processed_data
+              ).call
+            )
+          end
 
           respond_to do |format|
             format.turbo_stream {

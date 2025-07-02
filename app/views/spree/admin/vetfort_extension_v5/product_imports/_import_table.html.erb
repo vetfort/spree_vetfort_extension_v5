@@ -38,21 +38,23 @@
       <tbody>
         <% import.product_import_rows.each do |row| %>
           <tr>
-            <% import.field_mapping.each_value do |col| %>
+            <% import.field_mapping.each do |initial_col, mapped_col| %>
 
               <td>
-                <% field_type = import.field_mapping[col] %>
+                <% field_type = import.field_mapping[initial_col] %>
 
                 <% if field_type == 'taxons' %>
                   <div class="d-flex align-items-center">
-                    <span class="form-control form-control-sm" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= row.raw_data[col] %></span>
+                    <span class="form-control form-control-sm" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                      <%= row.taxons_names %>
+                    </span>
 
-                    <%= render 'edit_row_sidedrawer', import: import, row: row, col: col %>
+                    <%= render 'edit_row_sidedrawer', import: import, row: row, col: initial_col %>
                   </div>
                 <% else %>
-                    <input value="<%= row.raw_data[col] %>"
+                    <input value="<%= row.processed_data[mapped_col] %>"
                       class="form-control form-control-sm"
-                      data-field="<%= col %>"
+                      data-field="<%= mapped_col %>"
                       data-index="<%= row.id %>"
                       data-action="change->product-import#updateRow">
                 <% end %>
