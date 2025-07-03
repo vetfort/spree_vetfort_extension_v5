@@ -2,8 +2,8 @@ module Spree
   module Admin
     module VetfortExtensionV5
       class ProductImportRowsController < Spree::Admin::BaseController
-        before_action :set_product_import, only: [:update]
-        before_action :set_product_import_row, only: [:update]
+        before_action :set_product_import, only: [:update, :import_map_row_taxons_select_options]
+        before_action :set_product_import_row, only: [:update, :import_map_row_taxons_select_options]
 
         def update
           processed_data = @row.processed_data.merge(row_params)
@@ -21,6 +21,18 @@ module Spree
               ]
             }
           end
+        end
+
+        def import_map_row_taxons_select_options
+          common_taxon_ids = @row.common_values['taxons']
+
+          scope = current_store.taxons
+            .where.not(parent_id: nil)
+            .where.not(id: common_taxon_ids)
+            .pluck(:id, :pretty_name)
+            .map { |id, pretty_name| { id: id, name: pretty_name } }
+
+          render json: scope.as_json
         end
 
         private

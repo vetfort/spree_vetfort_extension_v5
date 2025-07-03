@@ -45,7 +45,7 @@
             <%= tom_select_tag 'product_import_row[taxons]',
               multiple: true,
               active_option: row.processed_data['taxons'],
-              url: spree.admin_taxons_select_options_path(format: :json),
+              url: spree.import_map_row_taxons_select_options_admin_vetfort_extension_v5_product_import_product_import_row_path(import, row, format: :json),
               class: 'w-100',
               select_data: {
                 'product-import-row-target': 'rowTaxonsSelect'

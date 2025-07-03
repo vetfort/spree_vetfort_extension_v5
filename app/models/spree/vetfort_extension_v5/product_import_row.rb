@@ -8,8 +8,6 @@ class Spree::VetfortExtensionV5::ProductImportRow < ApplicationRecord
 
   validates :product_import_id, presence: true
 
-  # enum :status, {pending: "pending", skipped: "skipped", imported: "imported", failed: "failed"}
-
   aasm column: :status do
     state :pending, initial: true
     state :skipped
@@ -28,6 +26,8 @@ class Spree::VetfortExtensionV5::ProductImportRow < ApplicationRecord
       transitions from: %i[pending skipped], to: :failed
     end
   end
+
+  delegate :common_values, to: :product_import
 
   def taxons_names
     return raw_data['taxons'] unless processed_data['taxons'].present?

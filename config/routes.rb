@@ -36,7 +36,11 @@ Spree::Core::Engine.add_routes do
           patch :remove_column
         end
 
-        resources :product_import_rows, only: %i[update]
+        resources :product_import_rows, only: %i[update] do
+          member do
+            get :import_map_row_taxons_select_options
+          end
+        end
       end
     end
   end
