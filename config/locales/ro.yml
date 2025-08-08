@@ -13,3 +13,90 @@ ro:
         cancel:
           sorry: "Ne pare rău!"
           failed: "Comanda dumneavoastră nu a fost procesată."
+    home_page:
+      search:
+        placeholder: "Începeți să tastați numele produsului"
+        title: "Căutare în magazin"
+        no_results: "Niciun rezultat"
+        show_all_results: "Afișează toate rezultatele"
+    admin_actions: "Monitorizarea acțiunilor"
+    payment_type: "Metoda de plată"
+    subtotal: "Subtotal"
+    availability: "Disponibilitate"
+    account_info: "Informații cont"
+    pdp:
+      checkout: "Finalizare comandă"
+      description: "Descriere"
+      details: "Detalii"
+      products_included_in_promotion: "Produse incluse în promoție"
+      quantity: "Cantitate"
+      view_cart: "Coș de cumpărături"
+      you_may_also_like: "V-ar putea plăcea și"
+    plp:
+      best_selling: "Cele mai vândute"
+      clear_all: "Șterge tot"
+      collection: "Colecție"
+      color: "Culoare"
+      done: "Gata"
+      default: "Implicit"
+      filter_by: "Filtrează după"
+      newest_first: "Cele mai noi"
+      no_results: "Niciun rezultat"
+      no_results_found: "Nu s-au găsit rezultate"
+      not_found_filters1: "Nu am putut găsi niciun rezultat pentru aceste filtre."
+      not_found_filters2: "Vă rugăm să încercați alte opțiuni."
+      not_found_text1: "Nu am putut găsi produse pentru '%{keywords}'."
+      not_found_text2: "Vă rugăm să încercați o altă căutare."
+      price: "Preț"
+      price_high_to_low: "Preț (descrescător)"
+      price_low_to_high: "Preț (crescător)"
+      name_a_z: "Nume (A-Z)"
+      name_z_a: "Nume (Z-A)"
+      result: "Rezultat"
+      results_for: "Rezultate pentru"
+      size: "Mărime"
+      sort_by: "Sortează după"
+      top_sellers: "Top vânzări"
+      type: "Tip"
+    cart_page:
+      product: "Produs"
+      quantity: "Cantitate"
+      add_promo_code: "ADAUGĂ COD PROMOȚIONAL"
+      checkout: "Finalizare comandă"
+    payment_methods:
+      Paynet: "Plată online Mastercard/Visa"
+    checkout_page:
+      delivery_method: "Metoda de livrare"
+      back_to_cart: "Înapoi la coș"
+      header: "Finalizare comandă"
+      and: "și"
+      accept_terms: "Sunt de acord și confirm că am citit"
+      conditions: "Condițiile"
+      terms: "Termenii și condițiile"
+      pay: "Plătește"
+      payment:
+        ok:
+          thank_you: "Vă mulțumim pentru cumpărătură!"
+          order: "Comanda dumneavoastră a fost procesată cu succes."
+          we_will_contact_you: "Vă vom contacta în curând."
+        cancel:
+          sorry: "Ne pare rău!"
+          failed: "Comanda dumneavoastră nu a fost procesată."
+    admin:
+      spree_vetfort:
+        import:
+          title: "Import Produse"
+          description: "Încărcați fișierul CSV cu produse pentru import."
+          file: "📄 Încărcați fișierul CSV"
+          import: "📥 Import"
+          supported_formats: "Formate suportate: .csv"
+          browse: "Alege fișier"
+          invalid_file: "Fișier invalid sau lipsă"
+          invalid_file_type: "Fișierul nu este un CSV"
+          empty_file: "Fișierul este gol sau invalid"
+        order:
+          sold: 'Da, vândut!'
+          events:
+            approve: "Vinde"
+    offline_vetfort: "Vânzare offline"
+    import_vetfort: "Import Produse"

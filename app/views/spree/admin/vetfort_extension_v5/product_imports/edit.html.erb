@@ -1,0 +1,20 @@
+<%= turbo_frame_tag "product-import-editor" do %>
+  <div data-controller="product-import"
+       data-product-import-manage-columns-path-value="<%= spree.manage_columns_admin_vetfort_extension_v5_product_import_path(@import) %>"
+       data-product-import-import-id-value="<%= @import.id %>">
+
+    <div class="d-flex justify-content-between align-items-center mb-3  mt-4">
+      <h4 class="mb-0">Импорт: <%= @import.id %></h4>
+      <%= button_to '🚀 Запустить импорт',
+          import_admin_vetfort_extension_v5_product_import_path(@import),
+          method: :post,
+          class: 'btn btn-primary',
+          data: { turbo_confirm: 'Точно начать импорт?' } %>
+    </div>
+
+    <%= render 'common_attributes', import: @import %>
+    <%= render 'table_controls', import: @import %>
+    <%= render 'import_table', import: @import %>
+    <%= render 'edit_columns_settings_sidedrawer', import: @import %>
+  </div>
+<% end %>

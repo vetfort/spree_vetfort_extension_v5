@@ -20,5 +20,49 @@ module SpreeVetfortExtensionV5
     end
 
     config.to_prepare(&method(:activate).to_proc)
+
+    # initializer 'spree_vetfort_extension_v5.admin_menu_item' do
+    #   Rails.application.config.spree_admin.store_nav_partials <<
+    #     'spree/admin/shared/sidebar/vetfort_import_nav_item'
+    # end
+
+    config.after_initialize do
+      Rails.application.config.spree_admin.store_products_nav_partials <<
+        'spree/admin/shared/sidebar/vetfort_import_nav_item'
+    end
+
+    # initializer 'spree_vetfort_extension_v5.helpers' do |app|
+    #   ActiveSupport.on_load(:action_controller) do
+    #     app.helpers.include SpreeVetfortExtensionV5::ProductImportsHelper
+    #   end
+    # end
+
+    # config.after_initialize do
+    #   # Rails.application.config.spree_admin.head_partials = []
+    #   # Rails.application.config.spree_admin.body_start_partials = []
+    #   # Rails.application.config.spree_admin.body_end_partials = []
+    #   # Rails.application.config.spree_admin.dashboard_analytics_partials = []
+    #   # Rails.application.config.spree_admin.dashboard_sidebar_partials = []
+    #   # Rails.application.config.spree_admin.product_form_partials = []
+    #   # Rails.application.config.spree_admin.product_form_sidebar_partials = []
+    #   # Rails.application.config.spree_admin.product_dropdown_partials = []
+    #   # Rails.application.config.spree_admin.products_filters_partials = []
+    #   # Rails.application.config.spree_admin.order_page_header_partials = []
+    #   # Rails.application.config.spree_admin.order_page_body_partials = []
+    #   # Rails.application.config.spree_admin.order_page_sidebar_partials = []
+    #   # Rails.application.config.spree_admin.order_page_summary_partials = []
+    #   # Rails.application.config.spree_admin.order_page_dropdown_partials = []
+    #   # Rails.application.config.spree_admin.orders_filters_partials = []
+    #   # Rails.application.config.spree_admin.store_form_partials = []
+    #   Rails.application.config.spree_admin.store_nav_partials = []
+    #   # Rails.application.config.spree_admin.settings_nav_partials = []
+    #   # Rails.application.config.spree_admin.shipping_method_form_partials = []
+    #   # Rails.application.config.spree_admin.store_settings_nav_partials = []
+    #   # Rails.application.config.spree_admin.store_orders_nav_partials = []
+    #   # Rails.application.config.spree_admin.store_products_nav_partials = []
+    #   # Rails.application.config.spree_admin.storefront_nav_partials = []
+    #   # Rails.application.config.spree_admin.tax_nav_partials = []
+    #   # Rails.application.config.spree_admin.user_dropdown_partials = []
+    # end
   end
 end

@@ -1,0 +1,78 @@
+<%= turbo_frame_tag "product-import-head" do %>
+  <div class="table-responsive">
+    <table class="table table-bordered table-sm">
+      <thead>
+        <tr>
+          <th>Actions</th>
+          <% import.field_mapping.each do |raw_col, mapped_col| %>
+            <th>
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <%= raw_col %><br>
+
+                  <%= form_with url: remap_column_admin_vetfort_extension_v5_product_import_path(import),
+                                method: :patch,
+                                data: { turbo_frame: "product-import-head" },
+                                class: "d-inline" do %>
+
+                    <%= hidden_field_tag :field, raw_col %>
+                    <%= help_bubble('Выберите поле, которое соответствует этой колонке.
+                                    Например, если колонка содержит цены — выберите Price.
+                                    Если оставить пустым, колонка будет проигнорирована при импорте.') %>
+                    <%= select_tag :value,
+                        options_for_select(
+                            (Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS - import.field_mapping.values).map { |f| [f.humanize, f] } +
+                            [[mapped_col.humanize, mapped_col]].uniq,
+                          selected: mapped_col.presence
+                        ),
+                        class: 'form-select form-select-sm mt-1 vetfort-header-select',
+                        onchange: "this.form.requestSubmit()" %>
+                  <% end %>
+                </div>
+              </div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% import.product_import_rows.each do |row| %>
+          <tr data-controller="product-import-row">
+            <td>
+              <%= render 'edit_row_sidedrawer', import: import, row: row %>
+            </td>
+            <% import.field_mapping.each do |initial_col, mapped_col| %>
+              <td>
+                <% field_type = import.field_mapping[initial_col] %>
+
+                <% if field_type == 'taxons' %>
+                  <div
+                    data-action="click->product-import-row#openDrawer"
+                    class="d-flex align-items-center">
+                    <span class="form-control form-control-sm vetfort-multiselect-editable">
+                      <%= row.taxons_names %>
+                    </span>
+                  </div>
+                <% elsif field_type == 'properties' %>
+                  <div
+                    data-action="click->product-import-row#openDrawer"
+                    class="d-flex align-items-center">
+                    <span class="form-control form-control-sm vetfort-multiselect-editable">
+                      <%= row.properties_names %>
+                    </span>
+                  </div>
+                <% else %>
+                  <input value="<%= row.processed_data[mapped_col] %>"
+                    class="form-control form-control-sm"
+                    data-field="<%= mapped_col %>"
+                    data-index="<%= row.id %>"
+                    data-action="change->product-import#updateRow">
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
