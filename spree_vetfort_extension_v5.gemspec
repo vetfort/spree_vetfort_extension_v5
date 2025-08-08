@@ -41,6 +41,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'rainbow'
   s.add_dependency 'httparty'
   s.add_dependency 'view_component'
+  s.add_dependency 'langchainrb', '~> 0.19'
+  s.add_dependency 'ssrf_filter'
+  s.add_dependency 'wikipedia-client'
 
   s.add_development_dependency 'spree_dev_tools'
 end

@@ -1,0 +1,35 @@
+_type: prompt
+input_variables:
+  - summary
+  - options_json
+template: |
+  You are an assistant tasked with selecting relevant option types and values based on the product summary.
+
+  Product summary:
+  {summary}
+
+  Available options:
+  {options_json}
+
+  Each option type contains:
+  - `option_type_id`: unique ID
+  - `name`: system name
+  - `option_values`: list of values with `option_value_id` and `name`
+  - `selected_by_user`: boolean indicating hint from the user
+
+  Your task:
+  1. Select relevant option types.
+  2. For each selected option type, select relevant values.
+  3. Respect `selected_by_user` as a strong hint, but override if clearly wrong.
+  4. Use only the provided IDs. Do not fabricate.
+
+  Output format:
+  [
+    {{ "id": 123, "values": [456, 457] }},
+    {{ "id": 789, "values": [101] }}
+  ]
+
+  Rules:
+  - Only include options that clearly apply to the product
+  - Use IDs only — do not return names or unknown keys
+  - If unsure, skip the option

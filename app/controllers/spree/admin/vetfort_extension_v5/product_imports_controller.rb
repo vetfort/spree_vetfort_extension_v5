@@ -1,8 +1,14 @@
+require 'dry-monads'
+
 module Spree
   module Admin
     module VetfortExtensionV5
       class ProductImportsController < Spree::Admin::BaseController
-        before_action :set_product_import, only: [:edit, :update, :update_common, :manage_columns]
+        include Dry::Monads[:task]
+
+        before_action :set_product_import, only: [
+          :edit, :update, :update_common, :manage_columns, :remap_column, :remove_column, :import
+        ]
 
         def index
           @imports = Spree::VetfortExtensionV5::ProductImport.all
@@ -31,10 +37,14 @@ module Spree
           end
 
           valid_fields = Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS.map(&:to_s)
-          field_mapping = csv_data.headers.to_h do |header|
+          field_mapping = csv_data.headers.filter_map do |header|
             canonical = valid_fields.find { |f| f.downcase == header.to_s.downcase }
-            [header, canonical] if canonical
-          end.compact
+            if canonical
+              [header, canonical]
+            else
+              [header, header]
+            end
+          end.to_h
 
           import = Spree::VetfortExtensionV5::ProductImport.new(
             user: current_user,
@@ -68,11 +78,19 @@ module Spree
         end
 
         def import
+          Task[:io] do
+            Operations::ProductImports::Import.new.call(product_import: @import)
+          end
+
+          flash[:success] = 'Import started'
+          redirect_to edit_admin_vetfort_extension_v5_product_import_path(@import)
         end
 
         def remap_column
-
-          @import = Spree::VetfortExtensionV5::ProductImport.includes(:product_import_rows).find(params[:id])
+          unless params[:value].presence
+            flash[:error] = 'Invalid value'
+            redirect_to edit_admin_vetfort_extension_v5_product_import_path(@import) and return
+          end
 
           field_mapping = @import.field_mapping || {}
           field_mapping[params[:field]] = params[:value].presence
@@ -116,8 +134,6 @@ module Spree
         end
 
         def remove_column
-          @import = Spree::VetfortExtensionV5::ProductImport.includes(:product_import_rows).find(params[:id])
-
           field_mapping = @import.field_mapping || {}
           new_field_mapping = field_mapping.reject { |_k, v| v == params[:field] }
           @import.update!(field_mapping: new_field_mapping)
@@ -140,6 +156,22 @@ module Spree
           end
         end
 
+        def import_map_common_property_select_options
+          scope = Spree::Property
+            .pluck(:id, :presentation)
+            .map { |id, presentation| { id: id, name: presentation } }
+
+          render json: scope.as_json
+        end
+
+        def import_map_common_option_select_options
+          scope = Spree::OptionType
+            .pluck(:id, :name)
+            .map { |id, name| { id: id, name: name } }
+
+          render json: scope.as_json
+        end
+
         private
 
         def set_product_import
@@ -151,7 +183,7 @@ module Spree
         end
 
         def common_params
-          params.require(:common).permit(taxons: [])
+          params.require(:common).permit(taxons: [], properties: [], options: [])
         end
 
         def parse_csv(file)

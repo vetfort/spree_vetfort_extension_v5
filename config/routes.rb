@@ -27,6 +27,8 @@ Spree::Core::Engine.add_routes do
       resources :product_imports, only: %i[index show new edit create update] do
         collection do
           get :template
+          get :import_map_common_property_select_options
+          get :import_map_common_option_select_options
         end
         member do
           post :import
@@ -39,6 +41,7 @@ Spree::Core::Engine.add_routes do
         resources :product_import_rows, only: %i[update] do
           member do
             get :import_map_row_taxons_select_options
+            get :import_map_row_properties_select_options
           end
         end
       end

@@ -5,11 +5,10 @@ class Spree::VetfortExtensionV5::ProductImport < ApplicationRecord
 
   DEFAULT_FIELDS = %w[
     sku
-    url
+    external_url
     name
     price
     taxons
-    options
     properties
     description
   ]

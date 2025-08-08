@@ -19,11 +19,11 @@ class Spree::VetfortExtensionV5::ProductImportRow < ApplicationRecord
     end
 
     event :import do
-      transitions from: %i[pending skipped], to: :imported
+      transitions from: %i[failed pending skipped], to: :imported
     end
 
     event :fail do
-      transitions from: %i[pending skipped], to: :failed
+      transitions from: %i[failed pending skipped], to: :failed
     end
   end
 
@@ -37,5 +37,15 @@ class Spree::VetfortExtensionV5::ProductImportRow < ApplicationRecord
     return if taxons.blank?
 
     taxons.pluck(:pretty_name).join(', ')
+  end
+
+  def properties_names
+    return raw_data['properties'] unless processed_data['properties'].present?
+
+    properties = Spree::Property.where(id: processed_data['properties'])
+
+    return if properties.blank?
+
+    properties.pluck(:presentation).join(', ')
   end
 end

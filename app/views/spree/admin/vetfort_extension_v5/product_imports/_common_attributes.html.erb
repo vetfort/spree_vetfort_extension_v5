@@ -1,29 +1,41 @@
-<div class="card mb-4 p-3 bg-light">
-  <div class="d-flex justify-content-start align-items-center gap-2">
-    <p class="mb-0">Общие значения</p>
+<div class="card mb-4 p-4 bg-light">
+  <div class="d-flex justify-content-start align-items-center mb-3">
+    <p class="mb-0 fw-bold me-2">Общие значения</p>
     <%= help_bubble('В этом разделе можно указать общие значения для всех импортируемых товаров.
                     Например, таксоны, категории, бренды и т.д.') %>
   </div>
 
-  <div class="row g-2">
-    <div class="col-md-6">
-      <%= label_tag :common_taxons, 'Таксоны' %>
+  <%= form_with url: update_common_admin_vetfort_extension_v5_product_import_path(import),
+      method: :patch,
+      data: { product_import_target: "commonForm" },
+      class: "needs-validation" do %>
 
-      <%= form_with url: update_common_admin_vetfort_extension_v5_product_import_path(import),
-          method: :patch,
-          data: { product_import_target: "commonTaxonsForm" },
-          class: "mb-3" do %>
-
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= label_tag :common_taxons, 'Taxons', class: 'form-label' %>
         <%= tom_select_tag 'common[taxons]',
           multiple: true,
           active_option: import.common_values['taxons'],
           url: spree.admin_taxons_select_options_path(format: :json),
-          class: 'w-100',
+          class: 'form-select w-100',
           select_data: {
             'product-import-target': 'commonTaxonsSelect'
           }
         %>
-      <% end %>
+      </div>
+
+      <div class="col-md-6">
+        <%= label_tag :common_properties, 'Properties', class: 'form-label' %>
+        <%= tom_select_tag 'common[properties]',
+          multiple: true,
+          active_option: import.common_values['properties'],
+          url: spree.import_map_common_property_select_options_admin_vetfort_extension_v5_product_imports_path(format: :json),
+          class: 'form-select w-100',
+          select_data: {
+            'product-import-target': 'commonPropertiesSelect'
+          }
+        %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>
