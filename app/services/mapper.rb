@@ -44,6 +44,10 @@ class Mapper
 
       option_names = value.split('|').map(&:strip)
       Spree::OptionValue.where(name: option_names).pluck(:id)
+    when 'images'
+      return [] if value.blank?
+
+      value.split('|').map(&:strip).reject(&:blank?)
     else
       value
     end

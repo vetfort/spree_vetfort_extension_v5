@@ -54,7 +54,8 @@ module LLMAssistants
         sku: row.processed_data['sku'],
         price: row.processed_data['price'].to_f,
         shipping_category: Spree::ShippingCategory.find_by(name: 'Default'),
-        external_url: row.processed_data['external_url'] || ''
+        external_url: row.processed_data['external_url'] || '',
+        images: row.processed_data['images'] || []
       }
     end
 

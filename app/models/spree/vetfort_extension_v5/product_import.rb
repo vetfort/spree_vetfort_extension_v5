@@ -11,6 +11,7 @@ class Spree::VetfortExtensionV5::ProductImport < ApplicationRecord
     taxons
     properties
     description
+    images
   ]
 
   belongs_to :user, class_name: 'Spree::User'

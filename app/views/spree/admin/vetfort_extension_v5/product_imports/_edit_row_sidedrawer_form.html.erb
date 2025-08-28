@@ -45,6 +45,16 @@
       </div>
 
       <div class="mb-3">
+        <%= label_tag 'product_import_row[images]', 'Images', class: 'form-label' %>
+        <%= text_field_tag 'product_import_row[images]', row.processed_data['images'],
+            class: 'form-control',
+            data: {
+              action: 'blur->product-import-row#autoSubmit',
+              product_import_row_target: 'input'
+            } %>
+      </div>
+
+      <div class="mb-3">
         <%= label_tag 'product_import_row[price]', 'Price', class: 'form-label' %>
         <%= text_field_tag 'product_import_row[price]', row.processed_data['price'],
             class: 'form-control',

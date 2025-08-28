@@ -34,6 +34,7 @@ module Structs
     attribute :shipping_category, Types.Instance(Spree::ShippingCategory)
     attribute :external_url, Types::Url
     attribute :tags, Types::Array.of(Types::Strict::String)
+    attribute :images, Types::Array.of(Types::Strict::String)
 
     def name(locale = :ru)
       {
