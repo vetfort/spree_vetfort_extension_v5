@@ -18,7 +18,7 @@ class Spree::VetfortExtensionV5::ProductImport < ApplicationRecord
   has_many :product_import_rows,
            class_name: 'Spree::VetfortExtensionV5::ProductImportRow',
            dependent: :destroy
-
+  alias_method :rows, :product_import_rows
   # has_one_attached :file
 
   validates :user_id, presence: true
