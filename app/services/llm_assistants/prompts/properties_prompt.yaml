@@ -41,6 +41,7 @@ template: |
      you MAY:
      - Use the brand-to-country mappings above
      - Use the Wikipedia tool (only if necessary)
+  4. Outputs for both `ru` and `ro` must never be empty. If you cannot produce a translated property, return the original property verbatim for that locale.
 
   Examples:
   - If summary doesn’t specify the origin of "Piper", return `"Poland"` based on known mappings.
@@ -57,6 +58,8 @@ template: |
       {{ "id": 102, "value": "..." }}
     ]
   }}
+  Both "ru" and "ro" must be non-empty arrays.
+  Each "value" must be a non-empty string.
 
   Rules:
   - Match the format defined by `kind`:
@@ -68,3 +71,13 @@ template: |
   - If unsure, skip the property
   - Never fabricate or hallucinate info
   - Never output "unknown", "n/a", "неизвестно", "necunoscut", etc.
+  - Language and terminology rules:
+    - For Russian values, NEVER use transliterations of English ingredient names.
+    - Use canonical Russian culinary nouns and correct case. Examples:
+      - salmon → лосось (value examples: "лосось", or in text: "с лососем"); NEVER "салмон"
+      - tuna → тунец ("тунец"; in text: "с тунцом")
+      - chicken → курица ("курица"; in text: "с курицей")
+      - beef → говядина ("говядина"; in text: "с говядиной")
+      - turkey → индейка ("индейка"; in text: "с индейкой")
+      - duck → утка ("утка"; in text: "с уткой")
+      - lamb → баранина ("баранина"; in text: "с бараниной")

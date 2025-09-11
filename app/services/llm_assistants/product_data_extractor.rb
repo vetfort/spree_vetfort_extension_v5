@@ -123,18 +123,18 @@ module LLMAssistants
             ru: {
               type: "object",
               properties: {
-                name: { type: "string" },
-                description: { type: "string" },
-                meta_title: { type: "string" },
-                meta_description: { type: "string" },
-                meta_keywords: { type: "string" },
+                name: { type: "string", minLength: 1 },
+                description: { type: "string", minLength: 1 },
+                meta_title: { type: "string", minLength: 1 },
+                meta_description: { type: "string", minLength: 1 },
+                meta_keywords: { type: "string", minLength: 1 },
                 properties: {
                   type: "array",
                   items: {
                     type: "object",
                     properties: {
                       id: { type: "integer" },
-                      value: { type: "string" }
+                      value: { type: "string", minLength: 1 }
                     },
                     required: %w[id value]
                   }
@@ -145,18 +145,18 @@ module LLMAssistants
             ro: {
               type: "object",
               properties: {
-                name: { type: "string" },
-                description: { type: "string" },
-                meta_title: { type: "string" },
-                meta_description: { type: "string" },
-                meta_keywords: { type: "string" },
+                name: { type: "string", minLength: 1 },
+                description: { type: "string", minLength: 1 },
+                meta_title: { type: "string", minLength: 1 },
+                meta_description: { type: "string", minLength: 1 },
+                meta_keywords: { type: "string", minLength: 1 },
                 properties: {
                   type: "array",
                   items: {
                     type: "object",
                     properties: {
                       id: { type: "integer" },
-                      value: { type: "string" }
+                      value: { type: "string", minLength: 1 }
                     },
                     required: %w[id value]
                   }

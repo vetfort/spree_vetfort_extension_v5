@@ -24,6 +24,19 @@ template: |
                   "Duck" → "с уткой" (ru), "cu rață" (ro)
       - Never leave ingredients transliterated like "Туна" or "Tonă".
       - Always use grammatically correct case in Russian (instrumental: "с тунцом", not "с тунец").
+  3a. Ingredient normalization for Russian (avoid ugly transliterations):
+      - Use canonical Russian culinary nouns, not transliterations of English.
+      - Examples (base noun → example in names):
+        - Salmon → лосось (use: "с лососем", NEVER "салмон")
+        - Turkey → индейка (use: "с индейкой")
+        - Beef → говядина (use: "с говядиной")
+        - Chicken → курица (use: "с курицей")
+        - Tuna → тунец (use: "с тунцом")
+        - Lamb → баранина (use: "с бараниной")
+        - Duck → утка (use: "с уткой")
+        - Rabbit → кролик (use: "с кроликом")
+        - Venison → оленина (use: "с олениной")
+        - Trout → форель (use: "с форелью")
   4. If the original name is already fully in Russian:
       - `ru` = original name
       - `ro` = translate ONLY the descriptive part into Romanian, preserving brand and product line markers exactly as in the original.
@@ -39,12 +52,14 @@ template: |
   9. Do not add marketing terms that are not in the original.
   10. Determine the language ONLY from the descriptive part (after brand/line), not from the brand or line itself.
   11. Use more natural terms for the product name, instead of "пакет" use "пауч"
+  12. Outputs for both `ru` and `ro` must never be empty. If you cannot produce a translated name, return the original name verbatim for that locale.
 
   Output format (valid JSON only, no extra text):
   {{
     "ru": "translated name in Russian",
     "ro": "translated name in Romanian"
   }}
+  Both "ru" and "ro" must be non-empty strings.
 
   ---
   EXAMPLES:

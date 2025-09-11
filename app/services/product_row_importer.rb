@@ -31,6 +31,11 @@ class ProductRowImporter < ApplicationService
       product.assign_attributes(product_attributes)
       product.save!
 
+      target_variant = variant || product.master
+      target_variant.update!(
+        track_inventory: false
+      )
+
       product.stores << store unless product.persisted? || product.stores.include?(store)
 
       product.reload
@@ -75,7 +80,9 @@ class ProductRowImporter < ApplicationService
         %i[ru ro].each do |locale|
           I18n.with_locale(locale) do
             pr_prop = product.product_properties.find_or_initialize_by(property: property)
-            pr_prop.value = values[locale]
+            value = [values[locale], values[:ru], '-'].compact.first
+
+            pr_prop.value = value
             pr_prop.save!
           end
         end
