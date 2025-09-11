@@ -7,7 +7,8 @@ class ProductRowImporter < ApplicationService
     product_with_properties = yield add_properties_to_product(product_with_taxons, product_data:)
     product_with_options = yield add_options_to_product(product_with_properties, product_data:)
     product_with_tags = yield add_tags_to_product(product_with_options, product_data:)
-    product_with_import = assign_product_to_import(product_with_tags, row:)
+    product_with_import = yield assign_product_to_import(product_with_tags, row:)
+    product_with_image = yield add_image_to_product(product_with_import, product_data:)
     mark_row_as_imported(row:)
 
     product_with_import
@@ -29,6 +30,11 @@ class ProductRowImporter < ApplicationService
 
       product.assign_attributes(product_attributes)
       product.save!
+
+      target_variant = variant || product.master
+      target_variant.update!(
+        track_inventory: false
+      )
 
       product.stores << store unless product.persisted? || product.stores.include?(store)
 
@@ -74,7 +80,9 @@ class ProductRowImporter < ApplicationService
         %i[ru ro].each do |locale|
           I18n.with_locale(locale) do
             pr_prop = product.product_properties.find_or_initialize_by(property: property)
-            pr_prop.value = values[locale]
+            value = [values[locale], values[:ru], '-'].compact.first
+
+            pr_prop.value = value
             pr_prop.save!
           end
         end
@@ -120,6 +128,62 @@ class ProductRowImporter < ApplicationService
     with_rescue do
       row.product = product
       row.save!
+
+      product.reload
+    end
+  end
+
+  # def add_image_to_product(product, product_data:)
+  #   with_rescue do
+
+  #     product_data.images.each do |image_url|
+  #       image = ImageProcessor.call(image_url)
+  #       product.images.attach(io: image, filename: 'image.png')
+  #     end
+
+  #     product.save!
+  #     product.reload
+  #   end
+  # end
+
+  # def add_image_to_product(product, product_data:)
+  #   with_rescue do
+  #     product_data.images.each do |image_url|
+  #       file = ImageProcessor.new.call(image_url)
+  #       product.images.attach(
+  #         io: file,
+  #         filename: "#{SecureRandom.hex(6)}.png",
+  #         content_type: "image/png"
+  #       )
+  #       file.close
+  #       file.unlink
+  #     end
+
+  #     product.save!
+  #     product.reload
+  #   end
+  # end
+
+  def add_image_to_product(product, product_data:)
+    with_rescue do
+      product_data.images.each do |image_url|
+        file = ImageProcessor.new.call(image_url)
+
+        Spree::Image.create!(
+          viewable: product.master,
+          attachment: {
+            io: file,
+            filename: "product-#{SecureRandom.hex(6)}.png",
+            content_type: "image/png"
+          },
+          alt: product.name
+        )
+      ensure
+        file.close unless file.closed?
+        file.unlink rescue nil
+      end
+
+      product.reload
     end
   end
 

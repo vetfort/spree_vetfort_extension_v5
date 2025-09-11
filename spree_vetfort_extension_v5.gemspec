@@ -44,6 +44,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'langchainrb', '~> 0.19'
   s.add_dependency 'ssrf_filter'
   s.add_dependency 'wikipedia-client'
+  s.add_dependency 'down'
+  s.add_dependency 'tempfile'
+  s.add_dependency 'aasm'
 
   s.add_development_dependency 'spree_dev_tools'
 end
