@@ -38,7 +38,6 @@ module LLMAssistants
       Failure("LLM call failed: #{e.message}")
     end
 
-
     private
 
     def summary_for(url)
