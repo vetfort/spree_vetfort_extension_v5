@@ -1,5 +1,3 @@
-<% valid_fields = Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS.map(&:to_s) %>
-
 <%= turbo_frame_tag "product-import-head" do %>
   <div class="table-responsive">
     <table class="table table-bordered table-sm">
@@ -7,27 +5,24 @@
         <tr>
           <th>Actions</th>
           <% import.field_mapping.each do |raw_col, mapped_col| %>
-            <% invalid_mapping = mapped_col.present? && !valid_fields.include?(mapped_col) %>
             <th>
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <div class="d-flex align-items-center <%= 'text-warning' if invalid_mapping %>">
+                  <div class="d-flex align-items-center <%= 'text-warning' if invalid_mapping?(mapped_col) %>">
 
                     <span
-                      class="badge ms-2 <%= invalid_mapping ? 'bg-warning' : 'bg-success' %>"
+                      class="badge ms-2 <%= column_badge_class(mapped_col) %>"
                       title="Unsupported column">
-                        <%if invalid_mapping %>
+                        <%if invalid_mapping?(mapped_col) %>
                           <%= "\u26A0" %>
                         <% end %>
                         <%= raw_col %>
                     </span>
 
-
-
                   </div>
                   <br>
 
-                  <%= form_with url: remap_column_admin_vetfort_extension_v5_product_import_path(import),
+                  <%= form_with url: helpers.remap_column_admin_vetfort_extension_v5_product_import_path(import),
                                 method: :patch,
                                 data: { turbo_frame: "product-import-head" },
                                 class: "d-inline" do %>
@@ -56,7 +51,7 @@
         <% import.product_import_rows.each do |row| %>
           <tr data-controller="product-import-row">
             <td>
-              <%= render 'edit_row_sidedrawer', import: import, row: row %>
+              <%= render 'spree/admin/vetfort_extension_v5/product_imports/edit_row_sidedrawer', import: import, row: row %>
             </td>
             <% import.field_mapping.each do |initial_col, mapped_col| %>
               <td>
