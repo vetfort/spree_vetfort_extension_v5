@@ -1,3 +1,5 @@
+<% valid_fields = Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS.map(&:to_s) %>
+
 <%= turbo_frame_tag "product-import-head" do %>
   <div class="table-responsive">
     <table class="table table-bordered table-sm">
@@ -5,10 +7,25 @@
         <tr>
           <th>Actions</th>
           <% import.field_mapping.each do |raw_col, mapped_col| %>
+            <% invalid_mapping = mapped_col.present? && !valid_fields.include?(mapped_col) %>
             <th>
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <%= raw_col %><br>
+                  <div class="d-flex align-items-center <%= 'text-warning' if invalid_mapping %>">
+
+                    <span
+                      class="badge ms-2 <%= invalid_mapping ? 'bg-warning' : 'bg-success' %>"
+                      title="Unsupported column">
+                        <%if invalid_mapping %>
+                          <%= "\u26A0" %>
+                        <% end %>
+                        <%= raw_col %>
+                    </span>
+
+
+
+                  </div>
+                  <br>
 
                   <%= form_with url: remap_column_admin_vetfort_extension_v5_product_import_path(import),
                                 method: :patch,
