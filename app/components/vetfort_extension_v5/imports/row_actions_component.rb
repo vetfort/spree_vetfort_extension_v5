@@ -41,11 +41,11 @@ module VetfortExtensionV5
 
       def status_indicator
         indicator = STATUS_INDICATORS.fetch(row.status.to_s) { DEFAULT_STATUS_INDICATOR }
-
+        title = row.failed? ? row.error_message : indicator[:label]
         tag.span(
           indicator[:icon],
           class: "btn btn-sm btn-outline status-indicator",
-          title: indicator[:label],
+          title: title,
           role: 'button',
           aria: { disabled: true }
         )
