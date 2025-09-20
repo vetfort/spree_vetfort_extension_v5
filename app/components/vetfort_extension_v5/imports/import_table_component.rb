@@ -21,6 +21,15 @@ module VetfortExtensionV5
         helpers.help_bubble(text)
       end
 
+      def select_options_for(mapped_col)
+        (Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS - import.field_mapping.values).map { |f| [f.humanize, f] } +
+        [[mapped_col.humanize, mapped_col]].uniq
+      end
+
+      def field_type_for(initial_col)
+        import.field_mapping[initial_col]
+      end
+
       private
 
       def valid_fields

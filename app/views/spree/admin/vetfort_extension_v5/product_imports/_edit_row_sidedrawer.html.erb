@@ -1,25 +1,28 @@
-  <div
-    class="d-flex align-items-center"
-    id="edit-row-<%= row.id %>"
-  >
+<div
+  class="d-flex align-items-center"
+  id="edit-row-<%= row.id %>"
+>
+  <%= with_tooltip('Редактировать поле', placement: 'top') do %>
     <%= button_tag type: :button,
         class: 'btn btn-sm btn-outline',
         data: {
           action: 'click->product-import-row#openDrawer'
         } do %>
-      ✏️
+
+      <%= icon('settings', class: 'text-primary') %>
     <% end %>
+  <% end %>
 
-    <div
-      data-product-import-row-target="backdrop"
-      data-action="click->product-import-row#closeDrawer"
-      class="vetfort-backdrop d-none"
-    ></div>
+  <div
+    data-product-import-row-target="backdrop"
+    data-action="click->product-import-row#closeDrawer"
+    class="vetfort-backdrop d-none"
+  ></div>
 
-    <aside
-      data-product-import-row-target="drawer"
-      class="vetfort-sidedrawer vetfort-sidedrawer-large position-fixed top-0 right-0 h-100 bg-white border-start p-4 shadow"
-    >
-      <%= render 'spree/admin/vetfort_extension_v5/product_imports/edit_row_sidedrawer_form', import: import, row: row %>
-    </aside>
-  </div>
+  <aside
+    data-product-import-row-target="drawer"
+    class="vetfort-sidedrawer vetfort-sidedrawer-large position-fixed top-0 right-0 h-100 bg-white border-start p-4 shadow"
+  >
+    <%= render 'spree/admin/vetfort_extension_v5/product_imports/edit_row_sidedrawer_form', import: import, row: row %>
+  </aside>
+</div>

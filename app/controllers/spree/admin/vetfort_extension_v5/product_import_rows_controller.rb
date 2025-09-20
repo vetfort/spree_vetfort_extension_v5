@@ -2,13 +2,17 @@ module Spree
   module Admin
     module VetfortExtensionV5
       class ProductImportRowsController < Spree::Admin::BaseController
+        include Dry::Monads[:task]
+
         before_action :set_product_import, only: [
           :update,
+          :import,
           :import_map_row_taxons_select_options,
           :import_map_row_properties_select_options
         ]
         before_action :set_product_import_row, only: [
           :update,
+          :import,
           :import_map_row_taxons_select_options,
           :import_map_row_properties_select_options
         ]
@@ -28,6 +32,32 @@ module Spree
                 ),
               ]
             }
+          end
+        end
+
+        def import
+          flash_type, message = process_row_import
+
+          @import.product_import_rows.reload
+
+          respond_to do |format|
+            format.html do
+              flash[flash_type] = message if flash_type && message
+              redirect_to edit_admin_vetfort_extension_v5_product_import_path(@import)
+            end
+
+            format.turbo_stream do
+              flash.now[flash_type] = message if flash_type && message
+
+              render turbo_stream: [
+                turbo_stream.replace(
+                  "product-import-head",
+                  view_context.render(
+                    ::VetfortExtensionV5::Imports::ImportTableComponent.new(import: @import)
+                  )
+                )
+              ]
+            end
           end
         end
 
@@ -72,6 +102,20 @@ module Spree
 
         def set_product_import_row
           @row = @import.product_import_rows.find(params[:id])
+        end
+
+        def process_row_import
+          return [:error, 'Эту строку нельзя импортировать повторно'] unless @row.may_import? || @row.may_process?
+
+          Task[:io] { ProductRowImporter.new.call(row: @row) }
+
+          [:success, 'Импорт запущен в фоне. Мы сообщим, когда будет готово.']
+        end
+
+        def generate_error_message(result)
+          return result.failure if result.failure.is_a?(String)
+
+          "[#{result.failure.class}] #{result.failure.message}"
         end
 
         def row_params

@@ -1,0 +1,15 @@
+<div class="d-flex align-items-center gap-2">
+  <%= status_indicator %>
+  <%= render 'spree/admin/vetfort_extension_v5/product_imports/edit_row_sidedrawer', import: import, row: row %>
+  <% if run_import_button? %>
+    <%= link_to helpers.icon('player-play', class: 'text-success'),
+        import_row_path,
+        class: 'btn btn-sm btn-outline',
+        data: { turbo_method: :post, turbo_confirm: 'Импортировать только эту строку?' } %>
+  <% elsif show_product_button? %>
+    <%= link_to '🔗',
+        admin_product_path,
+        class: 'btn btn-sm btn-outline',
+        target: '_blank' %>
+  <% end %>
+</div>

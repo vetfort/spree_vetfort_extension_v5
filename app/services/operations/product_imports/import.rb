@@ -6,7 +6,8 @@ module Operations
       include Dry::Monads[:task]
 
       def call(product_import:)
-        tasks = product_import.product_import_rows.each_slice(slice_size(product_import.product_import_rows.count, 2)).map do |batch|
+        rows = product_import.product_import_rows.not_imported
+        tasks = rows.each_slice(slice_size(rows.count, 2)).map do |batch|
           Task[:io] do
             ActiveRecord::Base.connection_pool.with_connection do
               batch.each { |row| process_row(row) }
