@@ -9,7 +9,7 @@ class ProductRowImporter < ApplicationService
     product_with_options = yield add_options_to_product(product_with_properties, product_data:)
     product_with_tags = yield add_tags_to_product(product_with_options, product_data:)
     product_with_import = yield assign_product_to_import(product_with_tags, row:)
-    product_with_image = yield add_image_to_product(product_with_import, product_data:)
+    product_with_image = yield add_image_to_product(product_with_import, product_data:, row:)
     mark_row_as_imported(row:)
 
     product_with_import
@@ -142,54 +142,29 @@ class ProductRowImporter < ApplicationService
     end
   end
 
-  # def add_image_to_product(product, product_data:)
-  #   with_rescue do
-
-  #     product_data.images.each do |image_url|
-  #       image = ImageProcessor.call(image_url)
-  #       product.images.attach(io: image, filename: 'image.png')
-  #     end
-
-  #     product.save!
-  #     product.reload
-  #   end
-  # end
-
-  # def add_image_to_product(product, product_data:)
-  #   with_rescue do
-  #     product_data.images.each do |image_url|
-  #       file = ImageProcessor.new.call(image_url)
-  #       product.images.attach(
-  #         io: file,
-  #         filename: "#{SecureRandom.hex(6)}.png",
-  #         content_type: "image/png"
-  #       )
-  #       file.close
-  #       file.unlink
-  #     end
-
-  #     product.save!
-  #     product.reload
-  #   end
-  # end
-
-  def add_image_to_product(product, product_data:)
+  def add_image_to_product(product, product_data:, row:)
     with_rescue do
       product_data.images.each do |image_url|
-        file = ImageProcessor.new.call(image_url)
+        file = nil
+        begin
+          file = ImageProcessor.new.call(image_url)
 
-        Spree::Image.create!(
-          viewable: product.master,
-          attachment: {
-            io: file,
-            filename: "product-#{SecureRandom.hex(6)}.png",
-            content_type: "image/png"
-          },
-          alt: product.name
-        )
-      ensure
-        file.close unless file.closed?
-        file.unlink rescue nil
+          Spree::Image.create!(
+            viewable: product.master,
+            attachment: {
+              io: file,
+              filename: "product-#{SecureRandom.hex(6)}.png",
+              content_type: "image/png"
+            },
+            alt: product.name
+          )
+        rescue => e
+          Rails.logger.warn "Error processing image: #{e.class}: #{e.message}"
+          row.update(error_message: "Error processing image: #{e.message}")
+        ensure
+          file.close unless file.nil? || file.closed?
+          file.unlink rescue nil
+        end
       end
 
       product.reload
