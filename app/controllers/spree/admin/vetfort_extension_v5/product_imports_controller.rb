@@ -111,8 +111,9 @@ module Spree
               render turbo_stream: [
                 turbo_stream.replace(
                   "product-import-head",
-                  partial: "spree/admin/vetfort_extension_v5/product_imports/import_table",
-                  locals: { import: @import }
+                  view_context.render(
+                    ::VetfortExtensionV5::Imports::ImportTableComponent.new(import: @import)
+                  )
                 ),
                 turbo_stream.replace(
                   "product-import-columns-settings",
@@ -143,8 +144,9 @@ module Spree
               render turbo_stream: [
                 turbo_stream.replace(
                   "product-import-head",
-                  partial: "spree/admin/vetfort_extension_v5/product_imports/import_table",
-                  locals: { import: @import }
+                  view_context.render(
+                    ::VetfortExtensionV5::Imports::ImportTableComponent.new(import: @import)
+                  )
                 ),
                 turbo_stream.replace(
                   "product-import-columns-settings",

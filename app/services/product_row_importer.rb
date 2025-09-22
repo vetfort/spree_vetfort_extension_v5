@@ -1,5 +1,6 @@
 class ProductRowImporter < ApplicationService
   def call(row:)
+    row = yield process_row(row:)
     product_data = yield extract_product_data(row:)
     product = yield create_product(product_data:)
     product_with_translations = yield localize_product(product:, product_data:)
@@ -15,6 +16,14 @@ class ProductRowImporter < ApplicationService
   end
 
   private
+
+  def process_row(row:)
+    with_rescue do
+      row.process! if row.may_process?
+
+      row.reload
+    end
+  end
 
   def extract_product_data(row:)
     LLMAssistants::ProductDataExtractor.new.call(row:)

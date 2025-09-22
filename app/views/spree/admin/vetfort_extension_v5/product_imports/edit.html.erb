@@ -14,7 +14,7 @@
 
     <%= render 'common_attributes', import: @import %>
     <%= render 'table_controls', import: @import %>
-    <%= render 'import_table', import: @import %>
+    <%= render VetfortExtensionV5::Imports::ImportTableComponent.new(import: @import) %>
     <%= render 'edit_columns_settings_sidedrawer', import: @import %>
   </div>
 <% end %>

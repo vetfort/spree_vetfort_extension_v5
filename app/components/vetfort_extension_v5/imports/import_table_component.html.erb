@@ -1,5 +1,6 @@
 <%= turbo_frame_tag "product-import-head" do %>
-  <div class="table-responsive">
+  <%= helpers.turbo_stream_from [import, :product_import_rows] %>
+  <div class="table-responsive" data-turbo-permanent>
     <table class="table table-bordered table-sm">
       <thead>
         <tr>
@@ -8,9 +9,21 @@
             <th>
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <%= raw_col %><br>
+                  <div class="d-flex align-items-center <%= 'text-warning' if invalid_mapping?(mapped_col) %>">
 
-                  <%= form_with url: remap_column_admin_vetfort_extension_v5_product_import_path(import),
+                    <span
+                      class="badge ms-2 <%= column_badge_class(mapped_col) %>"
+                      title="Unsupported column">
+                        <%if invalid_mapping?(mapped_col) %>
+                          <%= "\u26A0" %>
+                        <% end %>
+                        <%= raw_col %>
+                    </span>
+
+                  </div>
+                  <br>
+
+                  <%= form_with url: helpers.remap_column_admin_vetfort_extension_v5_product_import_path(import),
                                 method: :patch,
                                 data: { turbo_frame: "product-import-head" },
                                 class: "d-inline" do %>
@@ -21,8 +34,7 @@
                                     Если оставить пустым, колонка будет проигнорирована при импорте.') %>
                     <%= select_tag :value,
                         options_for_select(
-                            (Spree::VetfortExtensionV5::ProductImport::DEFAULT_FIELDS - import.field_mapping.values).map { |f| [f.humanize, f] } +
-                            [[mapped_col.humanize, mapped_col]].uniq,
+                            select_options_for(mapped_col),
                           selected: mapped_col.presence
                         ),
                         class: 'form-select form-select-sm mt-1 vetfort-header-select',
@@ -39,11 +51,16 @@
         <% import.product_import_rows.each do |row| %>
           <tr data-controller="product-import-row">
             <td>
-              <%= render 'edit_row_sidedrawer', import: import, row: row %>
+              <%= turbo_frame_tag dom_id(row, :actions) do %>
+                <%= render ::VetfortExtensionV5::Imports::RowActionsComponent.new(
+                      import: import,
+                      row: row
+                    ) %>
+              <% end %>
             </td>
             <% import.field_mapping.each do |initial_col, mapped_col| %>
               <td>
-                <% field_type = import.field_mapping[initial_col] %>
+                <% field_type = field_type_for(initial_col) %>
 
                 <% if field_type == 'taxons' %>
                   <div

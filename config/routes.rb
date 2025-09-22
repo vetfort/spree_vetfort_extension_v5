@@ -40,6 +40,7 @@ Spree::Core::Engine.add_routes do
 
         resources :product_import_rows, only: %i[update] do
           member do
+            post :import
             get :import_map_row_taxons_select_options
             get :import_map_row_properties_select_options
           end
