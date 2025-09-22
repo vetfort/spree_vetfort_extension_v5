@@ -1,3 +1,5 @@
+require 'dry-monads'
+
 module Spree
   module Admin
     module VetfortExtensionV5
