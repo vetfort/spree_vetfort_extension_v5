@@ -11,7 +11,6 @@ export default class extends Controller {
   }
 
   connect() {
-    console.log("AiDescriptionController connect");
     this.pubsub = window.VetfortDeps.PubSub;
     const { PubSub } = window.VetfortDeps || {};
     if (!PubSub) { console.warn("PubSub not loaded"); return; }
