@@ -31,6 +31,7 @@ module SpreeVetfortExtensionV5
       Rails.application.config.spree_admin.store_products_nav_partials <<
         'spree/admin/shared/sidebar/vetfort_import_nav_item'
 
+      Rails.application.config.spree_storefront.head_partials << "spree/shared/vetfort_extension_v5_storefront_head"
       Rails.application.config.spree_storefront.body_end_partials << 'spree/shared/vetfort_ai_consultant'
     end
 
