@@ -14,4 +14,8 @@ class SpreeVetfortExtensionV5::Images
   def self.facebook
     'https://res.cloudinary.com/domsefhf3/image/upload/v1747241261/facebook_kudu2f.svg'
   end
+
+  def self.bot_avatar
+    'https://res.cloudinary.com/domsefhf3/image/upload/v1759546675/bot_avatar_lycal9.png'
+  end
 end
