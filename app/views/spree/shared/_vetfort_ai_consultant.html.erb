@@ -7,21 +7,16 @@
       <%= turbo_frame_tag "vetfort-ai-chat", data: { action: "turbo:frame-load->ai-chat#scrollToBottom" } do %>
          <div class="w-[28rem] md:w-[40rem]">
           <div class="bg-purple-50 shadow rounded-lg overflow-hidden flex flex-col h-[80vh]  min-h-0">
-            <div class="p-3 h-[100%] overflow-y-auto space-y-3" data-ai-chat-target="messages" role="log" aria-live="polite" aria-relevant="additions">
-              <%= render 'spree/ai_consultant/customer_message' %>
-              <%= render 'spree/ai_consultant/bot_message' %>
-
-              <%= render 'spree/ai_consultant/customer_message' %>
-              <%= render 'spree/ai_consultant/bot_message' %>
-
-              <%= render 'spree/ai_consultant/customer_message' %>
-              <%= render 'spree/ai_consultant/bot_message' %>
-
-              <%= render 'spree/ai_consultant/customer_message' %>
-              <%= render 'spree/ai_consultant/bot_message' %>
+            <div id="ai-scroll" class="p-3 h-full overflow-y-auto" role="log" aria-live="polite" aria-relevant="additions" data-ai-chat-target="scroll">
+              <div id="ai-messages" class="min-h-full flex flex-col justify-end gap-3" data-ai-chat-target="messages"></div>
             </div>
 
             <%= render 'spree/ai_consultant/chat_form' %>
+
+            <!-- Templates for client-side message rendering using the same partials -->
+            <template id="ai-chat-message-user">
+              <%= render 'spree/ai_consultant/customer_message', text: '', time: '' %>
+            </template>
           </div>
         </div>
       <% end %>

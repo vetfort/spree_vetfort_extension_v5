@@ -1,0 +1,3 @@
+<%= turbo_stream.append "ai-messages" do %>
+  <%= render partial: "spree/ai_consultant/bot_message", locals: { text: @bot_text } %>
+<% end %>

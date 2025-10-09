@@ -1,6 +1,9 @@
 Spree::Core::Engine.add_routes do
   resources :links, only: [:index], controller: 'spree_vetfort_extension_v5/links'
 
+  # AI Consultant endpoint (skeleton)
+  post 'ai_consultant', to: 'spree_vetfort_extension_v5/ai_consultant#create'
+
   namespace :api do
     namespace :v2 do
       namespace :payments do
