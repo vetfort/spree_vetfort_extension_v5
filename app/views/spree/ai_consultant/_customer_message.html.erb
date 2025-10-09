@@ -1,19 +1,10 @@
 <div class="flex items-start justify-end gap-2.5">
-  <div class="flex flex-col w-full max-w-[80%] leading-1.5 p-4 border-gray-200 bg-green-200 rounded-xl rounded-tr-none dark:bg-green-200">
+  <div class="flex flex-col w-full max-w-[80%] leading-1.5 p-4 border-gray-200 bg-blue-100 text-blue-900 rounded-xl rounded-tr-none">
       <div class="flex items-center space-x-2 rtl:space-x-reverse">
-        <span class="text-sm font-semibold text-gray-900 dark:text-white">Ты</span>
-        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">11:46</span>
+        <span class="text-sm font-semibold text-blue-900">Ты</span>
+        <span class="text-sm font-normal text-blue-700 " data-ai-chat-timestamp><%= local_assigns[:time].presence || '' %></span>
       </div>
-      <p class="text-sm font-normal py-2.5 text-gray-900 dark:text-white">
-        That's awesome. Хуй пизда жигурда
-        That's awesome. Хуй пизда жигурда
-        That's awesome. Хуй пизда жигурда
-        That's awesome. Хуй пизда жигурда
-        That's awesome. Хуй пизда жигурда
-        That's awesome. Хуй пизда жигурда
-        That's awesome. Хуй пизда жигурда
-        That's awesome. Хуй пизда жигурда
-      </p>
+      <p class="text-sm font-normal py-2.5 text-blue-900" data-ai-chat-content><%= local_assigns[:text].presence || '' %></p>
   </div>
   <img class="w-10 h-10 rounded-full" src="<%= SpreeVetfortExtensionV5::Images.bot_avatar %>" alt="Jese image">
 </div>

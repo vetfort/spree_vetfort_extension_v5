@@ -1,7 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
+import { post } from "@rails/request.js";
 
 export default class extends Controller {
-  static targets = ["messages", "input"];
+  static targets = ["messages", "scroll", "input", "form", "sendButton", "stopButton"];
 
   connect() {
     this.deferScroll();
@@ -27,7 +28,7 @@ export default class extends Controller {
   }
 
   scrollToBottom() {
-    const el = this.messagesTarget;
+    const el = this.scrollTarget || this.messagesTarget;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
   }
@@ -45,6 +46,7 @@ export default class extends Controller {
     if (!text) return;
     this.appendUserMessage(text);
     this.inputTarget.value = "";
+    this.beginRequest(text);
   }
 
   appendSystemMessage(text) {
@@ -52,6 +54,17 @@ export default class extends Controller {
   }
 
   appendUserMessage(text) {
+    const tpl = document.getElementById("ai-chat-message-user");
+    if (tpl) {
+      const node = tpl.content.firstElementChild.cloneNode(true);
+      const contentEl = node.querySelector('[data-ai-chat-content]');
+      const ts = node.querySelector('[data-ai-chat-timestamp]');
+      if (contentEl) contentEl.textContent = text;
+      if (ts) ts.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      this.messagesTarget.appendChild(node);
+      this.deferScroll();
+      return;
+    }
     this.appendMessage(text, "user");
   }
 
@@ -70,5 +83,53 @@ export default class extends Controller {
     this.messagesTarget.appendChild(wrapper);
 
     this.deferScroll();
+  }
+
+  async beginRequest(message) {
+    if (this.abortController) this.abortController.abort();
+    this.abortController = new AbortController();
+    this.setBusy(true);
+
+    try {
+      const response = await post(this.formTarget.action || "/ai_consultant", {
+        body: JSON.stringify({ message }),
+        contentType: "application/json",
+        responseKind: "turbo-stream",
+        fetch: {
+          signal: this.abortController.signal,
+          headers: { Accept: "text/vnd.turbo-stream.html, text/html, application/json" }
+        }
+      });
+
+      if (!response) return; // aborted before fetch started
+      if (response.ok) {
+        const contentType = response.headers.get("content-type") || "";
+        if (contentType.includes("vnd.turbo-stream")) {
+          const text = await response.text();
+          Turbo.renderStreamMessage(text);
+        } else {
+          const text = await response.text();
+          if (text) this.appendSystemMessage(text);
+        }
+      }
+    } catch (err) {
+      if (err.name !== "AbortError") console.warn("AI request failed", err);
+    } finally {
+      this.setBusy(false);
+    }
+  }
+
+  stop() {
+    if (this.abortController) this.abortController.abort();
+    this.setBusy(false);
+  }
+
+  setBusy(isBusy) {
+    this.inputTarget.disabled = isBusy;
+    this.sendButtonTarget.classList.toggle("hidden", isBusy);
+    this.stopButtonTarget.classList.toggle("hidden", !isBusy);
+    if (!isBusy) {
+      this.inputTarget.focus();
+    }
   }
 }
