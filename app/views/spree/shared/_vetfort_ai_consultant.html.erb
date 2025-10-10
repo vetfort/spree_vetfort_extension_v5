@@ -5,6 +5,7 @@
 >
     <div id="chat-bot-dialog" class="flex flex-col items-center hidden mb-4 space-y-2 shadow-md">
       <%= turbo_frame_tag "vetfort-ai-chat", data: { action: "turbo:frame-load->ai-chat#scrollToBottom" } do %>
+         <%= turbo_stream_from "ai_consultant:#{current_user ? "user:#{current_user.id}" : "guest:#{cookies.signed[:vetfort_guest_uuid]}"}" %>
          <div class="w-[28rem] md:w-[40rem]">
           <div class="bg-purple-50 shadow rounded-lg overflow-hidden flex flex-col h-[80vh]  min-h-0">
             <div id="ai-scroll" class="p-3 h-full overflow-y-auto" role="log" aria-live="polite" aria-relevant="additions" data-ai-chat-target="scroll">

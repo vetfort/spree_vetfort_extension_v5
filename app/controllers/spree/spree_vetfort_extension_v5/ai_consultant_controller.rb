@@ -15,20 +15,11 @@ module Spree
         # Persist user message
         @conversation.append_message(role: 'user', content: @message)
 
-        # Build message history (oldest -> newest)
-        history = @conversation.messages.order(created_at: :asc).pluck(:role, :content).map do |role, content|
-          { role: role, content: content }
-        end
+        # Enqueue background job; Turbo stream subscription will receive reply
+        AiChatJob.perform_later(@conversation.id)
 
-        # Invoke assistant synchronously for now (later move to background job)
-        responses = ::LLMAssistants::AiConsultantAssistant.new.call(messages: history)
-        assistant_text = Array(responses).last&.dig(:content).to_s
-
-        # Persist assistant response
-        @conversation.append_message(role: 'assistant', content: assistant_text)
-
-        # Render via Turbo Stream
-        @bot_text = assistant_text
+        # Optional immediate UX feedback (spinner) — keep existing behavior minimal
+        @bot_text = "Processing…"
       end
 
       private

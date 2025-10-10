@@ -35,6 +35,11 @@ module SpreeVetfortExtensionV5
       Rails.application.config.spree_storefront.body_end_partials << 'spree/shared/vetfort_ai_consultant'
     end
 
+    console do
+      require 'vetfort/console'
+
+      Object.include Vetfort::Console
+    end
     # initializer 'spree_vetfort_extension_v5.helpers' do |app|
     #   ActiveSupport.on_load(:action_controller) do
     #     app.helpers.include SpreeVetfortExtensionV5::ProductImportsHelper
