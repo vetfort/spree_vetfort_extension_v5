@@ -2,6 +2,7 @@ _type: prompt
 input_variables:
   - url
   - content
+  - user_description
 template: |
   You are an assistant analyzing the contents of a product webpage for use in enriching an e-commerce catalog.
 
@@ -9,6 +10,9 @@ template: |
 
   Page content:
   {content}
+
+  User-provided description (optional):
+  {user_description}
 
   Your task is to extract meaningful and structured product insights that can later be used by another assistant to generate:
   - product descriptions
@@ -18,6 +22,9 @@ template: |
   - product tags
 
   Guidelines:
+  - Primary source: use the page content when available.
+  - Fallback/augmentation: if the page content is missing or incomplete, incorporate relevant facts from the user description.
+  - Only add facts present in either source; if they conflict, prefer the page content.
   - Focus only on product-related information
   - Ignore shipping info, return policy, terms of service, contact info, etc.
   - Be concise and avoid redundant statements
@@ -32,4 +39,4 @@ template: |
   6. 🧾 Packaging or feeding recommendation (if applicable)
   7. 🔖 Any special labels (e.g. grain-free, hypoallergenic, mono protein)
 
-  Return as 5–10 plain English sentences. Structure and clarity are more important than completeness.
+  Return as 5–10 plain English sentences. Structure and clarity are more important than completeness. Paraphrase user text; do not copy verbatim.
