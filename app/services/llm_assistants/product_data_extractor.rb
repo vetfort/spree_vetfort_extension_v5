@@ -2,7 +2,10 @@ module LLMAssistants
   class ProductDataExtractor < ApplicationService
     def call(row:)
       product_attributes = extract_product_attributes(row:)
-      summary = summary_for(row.processed_data['external_url'])
+      summary = summary_for(
+        row.processed_data['external_url'],
+        user_description: row.processed_data['description'] || ''
+      )
 
       parser = output_parser
 
@@ -18,7 +21,8 @@ module LLMAssistants
         product_name: row.processed_data['name'],
         external_url: row.processed_data['external_url'] || '',
         store_name: "VetFort",
-        page_summary: summary
+        page_summary: summary,
+        user_description: row.processed_data['description'] || ''
       )
 
       assistant.add_message_and_run!(content: formatted_prompt)
@@ -40,12 +44,31 @@ module LLMAssistants
 
     private
 
-    def summary_for(url)
-      return "" if url.blank?
+    def summary_for(url, user_description: '')
+      cache_key = Digest::SHA1.hexdigest([url.to_s, user_description.to_s].join(':'))
 
-      Rails.cache.fetch("llm:summary:#{Digest::SHA1.hexdigest(url)}", expires_in: 1.hour) do
-        LLMAssistants::Tools::UrlFetch.new(llm: llm).invoke(url: url)
+      return summarize_from_description(user_description) if url.blank?
+
+      Rails.cache.fetch("llm:summary:#{cache_key}", expires_in: 1.hour) do
+        LLMAssistants::Tools::UrlFetch.new(llm: llm).invoke(url: url, user_description: user_description)
       end
+    end
+
+    def summarize_from_description(user_description)
+      return "" if user_description.blank?
+
+      prompt = Langchain::Prompt.load_from_path(
+        file_path: File.join(__dir__, 'prompts', 'url_summary_prompt.yaml')
+      )
+
+      assistant = Langchain::Assistant.new(
+        llm: llm,
+        instructions: prompt.format(url: '', content: '', user_description: user_description),
+        tools: []
+      )
+
+      assistant.add_message_and_run!(content: "analyze and summarize")
+      assistant.messages.last&.content.to_s
     end
 
     def extract_product_attributes(row:)

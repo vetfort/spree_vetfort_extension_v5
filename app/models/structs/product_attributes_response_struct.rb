@@ -32,7 +32,7 @@ module Structs
     attribute :sku, Types::String
     attribute :price, Types::Float
     attribute :shipping_category, Types.Instance(Spree::ShippingCategory)
-    attribute :external_url, Types::Url
+    attribute :external_url, Types::Url.optional | Types::Strict::String.constrained(max_size: 0)
     attribute :tags, Types::Array.of(Types::Strict::String)
     attribute :images, Types::Array.of(Types::Strict::String)
 
