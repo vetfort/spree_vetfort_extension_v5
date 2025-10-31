@@ -31,7 +31,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'mrml'
 
   s.add_dependency 'ahoy_matey'
-  s.add_dependency 'browser'
   s.add_dependency 'geocoder', '~> 1.8'
 
   s.add_dependency 'dry-validation'

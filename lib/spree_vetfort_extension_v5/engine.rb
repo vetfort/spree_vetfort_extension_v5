@@ -4,6 +4,12 @@ module SpreeVetfortExtensionV5
     isolate_namespace Spree
     engine_name 'spree_vetfort_extension_v5'
 
+    initializer 'spree_vetfort_extension_v5.assets.precompile' do |app|
+      app.config.assets.precompile += %w[
+        spree/storefront/spree_vetfort_extension_v5.css
+      ]
+    end
+
     # use rspec for tests
     config.generators do |g|
       g.test_framework :rspec

@@ -3,7 +3,7 @@ require 'faker'
 module Spree
   module SpreeVetfortExtensionV5
     class AiConsultantController < Spree::StoreController
-      before_action :ensure_guest_uuid
+      before_action :ensure_guest_uuid, :set_variant
       before_action :find_or_create_conversation
 
       helper_method :guest_uuid

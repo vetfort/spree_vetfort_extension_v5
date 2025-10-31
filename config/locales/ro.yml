@@ -100,3 +100,24 @@ ro:
             approve: "Vinde"
     offline_vetfort: "Vânzare offline"
     import_vetfort: "Import Produse"
+  vetfort:
+    ai_consultant:
+      welcome_component:
+        title: "Buna, sunt Dașa, <br /> AI consultantul vostru personal"
+        suggestions: "Puneți o întrebare. <br /> De exemplu:"
+        suggestions_list:
+          item_1: "Ce hrană este cea mai potrivită pentru un pisoi de 3 luni?"
+          item_2: "Cât de des trebuie să fac baie câinelui meu?"
+          item_3: "Ce vitamine ar trebui să ofer unui cățeluș iarna?"
+          item_4: "Pisica mea refuză hrana uscată — ce pot face?"
+          item_5: "Cum aleg șamponul potrivit pentru un Labrador?"
+          item_6: "Poți recomanda jucării pentru câini de talie mică?"
+          item_7: "Care este diferența dintre hrana fără cereale și cea obișnuită?"
+          item_8: "Cum pot preveni puricii în mod natural?"
+          item_9: "Care recompense sunt cele mai sănătoase pentru dresaj?"
+          item_10: "Ce mărime de zgardă ar trebui să cumpăr pentru un pui de ciobănesc german?"
+          item_11: "Pot da lapte unei pisici adulte?"
+          item_12: "Care sunt semnele că hamsterul meu este stresat?"
+          item_13: "Ce tip de ansamblu de zgâriat este cel mai rezistent pentru pisici active?"
+          item_14: "Cum îmi pot pregăti câinele pentru o călătorie cu mașina?"
+          item_15: "Papagalii au nevoie de suplimente speciale?"

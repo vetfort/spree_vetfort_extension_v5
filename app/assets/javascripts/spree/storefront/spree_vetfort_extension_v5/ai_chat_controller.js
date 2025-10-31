@@ -2,7 +2,16 @@ import { Controller } from "@hotwired/stimulus";
 import { post } from "@rails/request.js";
 
 export default class extends Controller {
-  static targets = ["messages", "scroll", "input", "form", "sendButton", "stopButton"];
+  static targets = [
+    "messages",
+    "scroll",
+    "input",
+    "form",
+    "sendButton",
+    "stopButton",
+    "toggleButton",
+    "dialog"
+  ];
 
   connect() {
     this.deferScroll();
@@ -18,8 +27,6 @@ export default class extends Controller {
       });
       this.dialogObserver.observe(dialog, { attributes: true, attributeFilter: ["class"] });
     }
-
-    // this.appendSystemMessage("Hi! How can I help?");
   }
 
   disconnect() {
@@ -131,5 +138,9 @@ export default class extends Controller {
     if (!isBusy) {
       this.inputTarget.focus();
     }
+  }
+
+  toggleDialog() {
+    this.dialogTarget.classList.toggle("hidden");
   }
 }
