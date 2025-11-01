@@ -46,6 +46,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'wikipedia-client'
   s.add_dependency 'down'
   s.add_dependency 'tempfile'
+  s.add_dependency 'telegram-bot-ruby'
   s.add_dependency 'aasm'
 
   s.add_development_dependency 'spree_dev_tools'
