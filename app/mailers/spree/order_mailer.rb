@@ -15,7 +15,7 @@ module Spree
       subject = Spree.t('order_mailer.store_owner_notification_email.subject', store_name: current_store.name)
 
       if defined?(SendOrderToTelegramJob)
-        SendOrderToTelegramJob.perform_later(order.id)
+        SendOrderToTelegramJob.perform_later(@order.id)
       end
 
       mail(to: 'vladimir@vetfort.md', from: from_address, subject: subject,
