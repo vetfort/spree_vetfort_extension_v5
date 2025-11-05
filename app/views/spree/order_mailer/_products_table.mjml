@@ -1,0 +1,26 @@
+<mj-section>
+  <mj-column>
+    <mj-table align="left">
+      <tr>
+        <th align="left" style="white-space: nowrap;"></th>
+        <th align="left" style="white-space: nowrap;"><%= Spree.t(:quantity) %></th>
+        <th align="left" style="white-space: nowrap;"><%= Spree.t(:product) %></th>
+        <th align="left" style="white-space: nowrap;"><%= Spree.t(:price) %></th>
+      </tr>
+      <% @order.line_items.each do |line_item| %>
+        <tr>
+          <td align="left">
+            <%= link_to spree_storefront_resource_url(line_item.product) do %>
+              <%= image_tag(variant_image_url(line_item.variant), width: '70', style: 'max-width: 100px;') %>
+            <% end %>
+          </td>
+          <td align="left" style="white-space: nowrap;"><%= line_item.quantity %></td>
+          <td align="left" style="word-wrap: break-word; max-width: 150px;">
+            <%= line_item.variant.product.name_en %>
+          </td>
+          <td align="left" style="white-space: nowrap;"><%= line_item.single_money %></td>
+        </tr>
+      <% end %>
+    </mj-table>
+  </mj-column>
+</mj-section>

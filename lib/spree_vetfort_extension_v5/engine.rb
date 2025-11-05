@@ -19,6 +19,10 @@ module SpreeVetfortExtensionV5
       SpreeVetfortExtensionV5::Config = SpreeVetfortExtensionV5::Configuration.new
     end
 
+    initializer 'spree_vetfort_extension_v5.permitted_attributes' do
+      Spree::PermittedAttributes.product_attributes << :external_url
+    end
+
     def self.activate
       Dir.glob(File.join(File.dirname(__FILE__), '../../app/**/*_decorator*.rb')) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)

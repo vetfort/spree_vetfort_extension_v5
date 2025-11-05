@@ -1,0 +1,72 @@
+<mjml>
+  <mj-head>
+    <mj-title>VetFort Shop</mj-title>
+    <mj-preview>Всё необходимое в одном месте</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+      <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+    </mj-attributes>
+    <mj-style inline="inline">
+      .body-section {
+      -webkit-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+      -moz-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+      box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+      }
+    </mj-style>
+    <mj-style inline="inline">
+      .text-link {
+        color: #5e6ebf;
+      }
+    </mj-style>
+    <mj-style inline="inline">
+      .footer-link {
+        color: #888888;
+      }
+    </mj-style>
+
+  </mj-head>
+
+  <mj-body background-color="#f4f4f5">
+    <!-- Header -->
+    <mj-section full-width="full-width" background-color="#F2D5CB" padding-bottom="0">
+      <mj-column width="100%">
+        <mj-text color="#ffffff" font-weight="bold" align="center" text-transform="uppercase" font-size="16px" letter-spacing="1px" padding-top="30px">
+          Chisinau
+          <br />
+          <span style="color: #979797; font-weight: normal">-</span>
+        </mj-text>
+        <mj-text color="#17CBC4" align="center" font-size="13px" padding-top="0" font-weight="bold" text-transform="uppercase" letter-spacing="1px" line-height="20px">
+          <a href="https://www.google.com/maps/place/VetFort+shop/@47.0420944,28.8582592,17z/data=!3m1!4b1!4m6!3m5!1s0x40c97de63a55bf97:0x1bb96f3523fd911c!8m2!3d47.0420944!4d28.8608341!16s%2Fg%2F11y6p07s_s?entry=ttu" style="color: #17CBC4; text-decoration: none;">str. Kiev 12</a> |
+          <a href="tel:+37369123456" style="color: #17CBC4; text-decoration: none;"><span itemprop="telephone">+373 69 123 456</span></a>
+          <br />
+          <%= Time.current.year %>
+        </mj-text>
+        <mj-image src="https://res.cloudinary.com/domsefhf3/image/upload/v1733502258/Untitled_toxsa5.png" width="600px" alt="" padding="0" href="https://google.com" />
+      </mj-column>
+    </mj-section>
+
+    <!-- Content -->
+    <mj-wrapper background-color="#ffffff" padding="20px">
+      <%= yield %>
+    </mj-wrapper>
+
+    <!-- Footer -->
+    <mj-section padding-top="20px">
+      <mj-column>
+        <mj-social font-size="15px" icon-size="30px" mode="horizontal">
+          <!-- <mj-social-element name="facebook" href="https://facebook.com/vetfort.md" />
+          <mj-social-element name="instagram" href="https://instagram.com/vetfort.md" />
+          <mj-social-element name="tiktok" href="https://tiktok.com/@vetfort.md" /> -->
+        </mj-social>
+
+        <mj-text align="center" color="#9ca3af" font-size="12px" padding-top="20px">
+          © <%= Time.current.year %> VetFort S.R.L. Все права защищены.
+        </mj-text>
+
+        <mj-text align="center" color="#9ca3af" font-size="12px">
+          Str. Kiev 12, Chișinău, Moldova
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

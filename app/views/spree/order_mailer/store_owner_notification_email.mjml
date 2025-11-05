@@ -1,0 +1,49 @@
+
+<mj-section>
+  <mj-column>
+    <mj-text font-size="24px" font-weight="bold">
+      Order Notification
+    </mj-text>
+    <mj-text>
+      Order Number: <%= @order.number %>
+    </mj-text>
+    <mj-text>
+      Order Date: <%= @order.created_at.strftime('%B %d, %Y') %>
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<!-- Product Images with Names -->
+<%= render 'spree/order_mailer/products_table' %>
+
+<!-- Order Total -->
+<mj-section>
+  <mj-column>
+    <mj-text font-size="20px" font-weight="bold">
+      Total: <%= @order.display_total.to_html %>
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+
+<!-- User Information -->
+<% address_hash = @order.bill_address&.active_merchant_hash %>
+<mj-section>
+  <mj-column>
+    <mj-text font-size="18px" font-weight="bold">
+      Customer Information
+    </mj-text>
+    <mj-text>
+      Name: <%= @order.bill_address&.full_name %>
+    </mj-text>
+    <mj-text>
+      Email: <%= @order.email %>
+    </mj-text>
+    <mj-text>
+      Phone: <%= @order.bill_address&.phone %>
+    </mj-text>
+    <mj-text>
+      <%= sanitize(@order.bill_address&.to_s, tags: %w(br)) %>
+    </mj-text>
+  </mj-column>
+</mj-section>

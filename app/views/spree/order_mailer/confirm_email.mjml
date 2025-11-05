@@ -1,0 +1,113 @@
+<mj-section>
+  <mj-column>
+    <mj-text font-size="24px" font-weight="bold">
+      <%= Spree.t('order_mailer.confirm_email.hey', name: name_for(@order)) %>
+    </mj-text>
+
+    <mj-text>
+      <%= Spree.t('order_mailer.confirm_email.instructions') %>
+    </mj-text>
+
+    <mj-text font-size="20px" font-weight="bold" padding-top="20px">
+      <%= Spree.t('order_mailer.confirm_email.order_summary', number: @order.number) %>
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<!-- Product Images with Names -->
+<%= render 'spree/order_mailer/products_table' %>
+
+<!-- Order Details -->
+<mj-section padding-top="0">
+  <mj-column>
+    <mj-table cellpadding="10px" css-class="purchase_content">
+      <!-- Promotions -->
+      <% if @order.line_item_adjustments.exists? %>
+        <% if @order.all_adjustments.promotion.eligible.exists? %>
+          <% @order.all_adjustments.promotion.eligible.group_by(&:label).each do |label, adjustments| %>
+            <tr>
+              <td>
+                <p class="f-fallback purchase_total purchase_total--label">
+                  <%= Spree.t(:promotion) %>:
+                </p>
+                <p class="f-fallback purchase_total--name purchase_total--label">
+                  <%= label %>
+                </p>
+              </td>
+              <td class="purchase_total-col">
+                <p class="f-fallback purchase_total">
+                  <%= Spree::Money.new(adjustments.sum(&:amount), currency: @order.currency) %>
+                </p>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <!-- Shipping -->
+      <% @order.shipments.group_by { |s| s.selected_shipping_rate&.name }.each do |name, shipments| %>
+        <tr>
+          <td>
+            <p class="f-fallback purchase_total purchase_total--label">
+              <%= Spree.t(:shipping) %>:
+            </p>
+            <p class="f-fallback purchase_total--name purchase_total--label">
+              <%= name %>
+            </p>
+          </td>
+          <td class="purchase_total-col">
+            <p class="f-fallback purchase_total">
+              <%= Spree::Money.new(shipments.sum(&:discounted_cost), currency: @order.currency) %>
+            </p>
+          </td>
+        </tr>
+      <% end %>
+
+      <!-- Tax -->
+      <% if @order.additional_tax_total != 0 %>
+        <tr>
+          <td>
+            <p class="f-fallback purchase_total purchase_total--label">
+              <%= Spree.t(:tax) %>:
+            </p>
+          </td>
+          <td class="purchase_total-col">
+            <p class="f-fallback purchase_total">
+              <%= @order.display_additional_tax_total.to_html %>
+            </p>
+          </td>
+        </tr>
+      <% end %>
+
+      <!-- Total -->
+      <tr>
+        <td>
+          <p class="f-fallback purchase_total purchase_total--label">
+            <strong><%= Spree.t(:total) %>:</strong>
+          </p>
+        </td>
+        <td class="purchase_total-col">
+          <p class="f-fallback purchase_total">
+            <strong><%= @order.display_total.to_html %></strong>
+          </p>
+        </td>
+      </tr>
+    </mj-table>
+  </mj-column>
+</mj-section>
+
+<mj-section>
+  <mj-column>
+    <mj-text>
+      <%= Spree.t('order_mailer.confirm_email.thanks') %>
+    </mj-text>
+    <mj-text>
+      <%= Spree.t('order_mailer.store_team', store_name: current_store.name) %>
+    </mj-text>
+    <mj-text align="right" color="#6B7280" line-height="20px">
+      <a href="tel:+37369123456" style="color: #17CBC4; text-decoration: none;"><span itemprop="telephone">+373 69 123 456</span></a> <br/>
+      <a href="mailto:info@vetfort.md" style="color: #17CBC4; text-decoration: none;"><span itemprop="email">info@vetfort.md</span></a> <br/>
+      <span style="color: #17CBC4; text-decoration: none;" itemprop="address">ул. Киева 12, г. Кишинев, Молдова</span>
+    </mj-text>
+  </mj-column>
+</mj-section>
