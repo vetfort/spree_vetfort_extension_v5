@@ -7,10 +7,12 @@ class Spree::VetfortExtensionV5::AiConsultantConversation < ApplicationRecord
            foreign_key: :ai_consultant_conversation_id,
            inverse_of: :conversation
 
-  validates :user_identifier, presence: true, uniqueness: true
+  validates :user_identifier, presence: true
   validates :status, presence: true
 
-  scope :recent, -> { order(updated_at: :desc) }
+  scope :for_user, ->(user_identifier) { where(user_identifier: user_identifier) }
+  scope :recent, -> { order(last_activity_at: :desc) }
+  scope :with_activity_after, ->(threshold) { where('last_activity_at > ?', threshold) }
 
   # Appends a message and updates last_activity_at
   def append_message(role:, content:, id: nil)

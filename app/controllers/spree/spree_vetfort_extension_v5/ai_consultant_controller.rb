@@ -5,9 +5,12 @@ module Spree
     class AiConsultantController < Spree::StoreController
       before_action :ensure_guest_uuid, :set_variant
       before_action :find_or_create_conversation
+      before_action :set_conversations
 
       helper_method :guest_uuid
 
+      def index
+      end
 
       def create
         @message = ai_consultant_params[:message]
@@ -17,9 +20,6 @@ module Spree
 
         # Enqueue background job; Turbo stream subscription will receive reply
         AiChatJob.perform_later(@conversation.id)
-
-        # Optional immediate UX feedback (spinner) — keep existing behavior minimal
-        @bot_text = "Processing…"
       end
 
       private
@@ -33,9 +33,15 @@ module Spree
       end
 
       def find_or_create_conversation
-        user_identifier = current_user.present? ? "user:#{current_user.id}" : "guest:#{guest_uuid}"
+        @conversation = conversation_finder.last_active_or_new_conversation
+      end
 
-        @conversation = ::Spree::VetfortExtensionV5::AiConsultantConversation.find_or_create_by(user_identifier: user_identifier)
+      def set_conversations
+        @conversations = conversation_finder.all_for_user
+      end
+
+      def conversation_finder
+        @conversation_finder ||= ConversationFinder.new(current_user: current_user, guest_uuid: guest_uuid)
       end
 
       def ai_consultant_params

@@ -1,6 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
-import { post } from "@rails/request.js";
 
+import { TOPICS } from "./constants";
+import { ScrollManager } from "./services/scroll_manager";
+import { chatApi } from "./services/api";
 export default class extends Controller {
   static targets = [
     "messages",
@@ -8,43 +10,90 @@ export default class extends Controller {
     "input",
     "form",
     "sendButton",
-    "stopButton",
     "toggleButton",
-    "dialog"
+    "dialog",
+    "heroWindow",
+    "openChatButton",
+    "typingIndicator",
   ];
 
   connect() {
-    this.deferScroll();
+    this.openInitialComponent();
+    this.subscribeToPubSub();
 
-    this.messagesObserver = new MutationObserver(() => this.scrollToBottom());
-    this.messagesObserver.observe(this.messagesTarget, { childList: true, subtree: false });
+    this.scrollManager = new ScrollManager({
+      scrollContainer: this.scrollTarget,
+      messagesContainer: this.messagesTarget
+    });
+  }
 
-    const dialog = document.getElementById("chat-bot-dialog");
-    if (dialog) {
-      this.dialogObserver = new MutationObserver(() => {
-        const isHidden = dialog.classList.contains("hidden");
-        if (!isHidden) this.deferScroll();
-      });
-      this.dialogObserver.observe(dialog, { attributes: true, attributeFilter: ["class"] });
-    }
+  subscribeToPubSub() {
+    const { PubSub } = window.VetfortDeps || {};
+    if (!PubSub) { console.warn("PubSub not loaded"); }
+    this.pubsub = PubSub;
+
+    this.closeHeroCtaSubscription = this.pubsub.subscribe(TOPICS.CLOSE_HERO_CTA, () => this.closeHeroCta());
+    this.suggestionsClickSubscription = this.pubsub.subscribe(TOPICS.SUGGESTIONS_CLICK, (_, data) => this.suggestionsClick(data));
+    this.heroInputClickSubscription = this.pubsub.subscribe(TOPICS.HERO_INPUT_CLICK, () => this.heroInputClick());
+
+    this.beforeStreamRenderSubscription = this.beforeStreamRender.bind(this);
+    document.addEventListener("turbo:before-stream-render", this.beforeStreamRenderSubscription);
+  }
+
+  unsubscribeFromPubSub() {
+    this.pubsub.unsubscribe(this.closeHeroCtaSubscription);
+    this.pubsub.unsubscribe(this.suggestionsClickSubscription);
+    this.pubsub.unsubscribe(this.heroInputClickSubscription);
+
+    document.removeEventListener("turbo:before-stream-render", this.beforeStreamRenderSubscription);
   }
 
   disconnect() {
-    this.messagesObserver?.disconnect();
-    this.dialogObserver?.disconnect();
+    this.scrollManager?.disconnect();
+    this.unsubscribeFromPubSub();
   }
 
-  scrollToBottom() {
-    const el = this.scrollTarget || this.messagesTarget;
-    if (!el) return;
-    el.scrollTop = el.scrollHeight;
+  beforeStreamRender(event) {
+    const el = event.target;
+
+    if (el?.tagName === 'TURBO-STREAM' && el.getAttribute('target') === this.messagesTarget.id) {
+      this.typingIndicatorTarget.classList.add('hidden');
+    }
   }
 
-  deferScroll() {
-    requestAnimationFrame(() => {
-      this.scrollToBottom();
-      setTimeout(() => this.scrollToBottom(), 50);
-    });
+  suggestionsClick(data) {
+    this.toggleDialog();
+    this.appendUserMessage(data);
+    this.beginRequest(data);
+    this.closeHeroCta();
+    this.setBusy(true);
+    this.inputTarget.value = "";
+  }
+
+  heroInputClick() {
+    this.toggleDialog();
+    this.closeHeroCta();
+  }
+
+  closeHeroCta() {
+    this.openChatButtonTarget.classList.remove("hidden");
+    this.heroWindowTarget.classList.add("hidden");
+    sessionStorage.setItem('close_for_this_session', 'true');
+  }
+
+  openInitialComponent() {
+    const dontShowAgain = localStorage.getItem('dont_show_ai_consultant_cta');
+    const closeForThisSession = sessionStorage.getItem('close_for_this_session');
+
+    if (closeForThisSession && closeForThisSession === 'true') {
+      this.openChatButtonTarget.classList.remove("hidden");
+    } else {
+      if (dontShowAgain && dontShowAgain === 'true') {
+        this.openChatButtonTarget.classList.remove("hidden");
+      } else {
+        this.heroWindowTarget.classList.remove("hidden");
+      }
+    }
   }
 
   submit(event) {
@@ -69,7 +118,6 @@ export default class extends Controller {
       if (contentEl) contentEl.textContent = text;
       if (ts) ts.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       this.messagesTarget.appendChild(node);
-      this.deferScroll();
       return;
     }
     this.appendMessage(text, "user");
@@ -88,36 +136,22 @@ export default class extends Controller {
     bubble.textContent = text;
     wrapper.appendChild(bubble);
     this.messagesTarget.appendChild(wrapper);
-
-    this.deferScroll();
   }
 
   async beginRequest(message) {
     if (this.abortController) this.abortController.abort();
     this.abortController = new AbortController();
     this.setBusy(true);
+    this.typingIndicatorTarget.classList.toggle("hidden", false);
 
     try {
-      const response = await post(this.formTarget.action || "/ai_consultant", {
-        body: JSON.stringify({ message }),
-        contentType: "application/json",
-        responseKind: "turbo-stream",
-        fetch: {
-          signal: this.abortController.signal,
-          headers: { Accept: "text/vnd.turbo-stream.html, text/html, application/json" }
-        }
+      const response = await chatApi.sendMessage(message, {
+        signal: this.abortController.signal
       });
 
-      if (!response) return; // aborted before fetch started
+      if (!response) return;
       if (response.ok) {
-        const contentType = response.headers.get("content-type") || "";
-        if (contentType.includes("vnd.turbo-stream")) {
-          const text = await response.text();
-          Turbo.renderStreamMessage(text);
-        } else {
-          const text = await response.text();
-          if (text) this.appendSystemMessage(text);
-        }
+        console.log('AI request successful');
       }
     } catch (err) {
       if (err.name !== "AbortError") console.warn("AI request failed", err);
@@ -134,7 +168,6 @@ export default class extends Controller {
   setBusy(isBusy) {
     this.inputTarget.disabled = isBusy;
     this.sendButtonTarget.classList.toggle("hidden", isBusy);
-    this.stopButtonTarget.classList.toggle("hidden", !isBusy);
     if (!isBusy) {
       this.inputTarget.focus();
     }
@@ -142,5 +175,6 @@ export default class extends Controller {
 
   toggleDialog() {
     this.dialogTarget.classList.toggle("hidden");
+    this.inputTarget.focus();
   }
 }

@@ -17,7 +17,7 @@ class AiChatJob < ApplicationJob
 
     Turbo::StreamsChannel.broadcast_append_to(
       "ai_consultant:#{conversation.user_identifier}",
-      target: 'ai-messages',
+      target: "ai_consultant:#{conversation.user_identifier}:ai-messages",
       partial: 'spree/ai_consultant/bot_message',
       locals: { text: assistant_text }
     )

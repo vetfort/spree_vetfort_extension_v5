@@ -3,3 +3,7 @@
 
 en:
   hello: "Hello world"
+  vetfort:
+    ai_consultant:
+      welcome_component:
+        placeholder: "Type a message… I'm all ears (well, algorithms really)."

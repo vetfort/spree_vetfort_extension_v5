@@ -1,23 +1,18 @@
 <div
-  class="fixed end-6 bottom-6 group
-    flex flex-col items-end z-[100]
-    vetfort--ai-consultant"
-  data-controller="ai-chat"
->
-  <div
     class="flex flex-col items-center hidden mb-4 space-y-2 shadow-md
     vetfort--ai-consultant__dialog"
     data-ai-chat-target="dialog"
   >
     <%= turbo_frame_tag "vetfort-ai-chat", data: { action: "turbo:frame-load->ai-chat#scrollToBottom" } do %>
-        <%= turbo_stream_from "ai_consultant:#{current_user ? "user:#{current_user.id}" : "guest:#{cookies.signed[:vetfort_guest_uuid]}"}" %>
+        <%= turbo_stream_from turbo_stream_identifier %>
         <div class="w-[28rem] md:w-[40rem]">
-        <div class="bg-purple-50 shadow rounded-lg overflow-hidden flex flex-col h-[80vh]  min-h-0">
+        <div class="vetfort--ai-consultant__dialog-content">
           <div id="ai-scroll" class="p-3 h-full overflow-y-auto" role="log" aria-live="polite" aria-relevant="additions" data-ai-chat-target="scroll">
-            <div id="ai-messages" class="min-h-full flex flex-col justify-end gap-3" data-ai-chat-target="messages"></div>
+            <div id="<%= messages_target_id %>" class="min-h-full flex flex-col justify-end gap-3" data-ai-chat-target="messages"></div>
+            <%= render 'spree/ai_consultant/typing_indicator' %>
           </div>
 
-          <%= render 'spree/ai_consultant/chat_form' %>
+          <%= render VetfortExtensionV5::AiConsultant::ChatFormComponent.new %>
 
           <!-- Templates for client-side message rendering using the same partials -->
           <template id="ai-chat-message-user">
@@ -27,9 +22,3 @@
       </div>
     <% end %>
   </div>
-  <% if show_ai_consultant_cta? %>
-    <%= render VetfortExtensionV5::AiConsultant::HeroComponent.new %>
-  <%else%>
-    <%= render 'spree/ai_consultant/bot_button' %>
-  <% end %>
-</div>

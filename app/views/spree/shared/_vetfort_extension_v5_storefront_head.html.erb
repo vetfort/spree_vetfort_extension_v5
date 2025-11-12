@@ -1,6 +1,13 @@
 <%= stylesheet_link_tag 'spree/storefront/spree_vetfort_extension_v5', media: 'all' %>
 <script type="module">
+  import PubSub from "https://esm.sh/pubsub-js@1.9.4";
+
+  window.VetfortDeps ||= {};
+  window.VetfortDeps.PubSub = PubSub;
+
   import AiChatController from "/assets/spree/storefront/spree_vetfort_extension_v5/ai_chat_controller.js";
+  import AiChatHeroController from "/assets/spree/storefront/spree_vetfort_extension_v5/ai_chat/hero_controller.js";
 
   window.Stimulus.register("ai-chat", AiChatController);
+  window.Stimulus.register("ai-chat--hero", AiChatHeroController);
 </script>

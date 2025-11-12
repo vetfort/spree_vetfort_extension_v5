@@ -105,6 +105,9 @@ ro:
       welcome_component:
         title: "Buna, sunt Dașa, <br /> AI consultantul vostru personal"
         suggestions: "Puneți o întrebare. <br /> De exemplu:"
+        dont_show_again: "Nu afișați din nou"
+        placeholder: "Scrie un mesaj… Sunt numai urechi (ei bine, mai degrabă algoritmi)."
+        close_button_label: "Închide chat"
         suggestions_list:
           item_1: "Ce hrană este cea mai potrivită pentru un pisoi de 3 luni?"
           item_2: "Cât de des trebuie să fac baie câinelui meu?"
