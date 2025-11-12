@@ -2,6 +2,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 import { TOPICS } from "../constants";
+import { ChatStateManager } from "../services/chat_state_manager";
 
 export default class extends Controller {
   connect() {
@@ -9,6 +10,7 @@ export default class extends Controller {
     if (!PubSub) { console.warn("PubSub not loaded"); }
 
     this.pubsub = PubSub;
+    this.stateManager = new ChatStateManager();
   }
 
   close() {
@@ -16,7 +18,11 @@ export default class extends Controller {
   }
 
   dontShowAiConsultantCta(e) {
-    localStorage.setItem('dont_show_ai_consultant_cta', e.target.checked);
+    if (e.target.checked) {
+      this.stateManager.dismissPermanently();
+    } else {
+      this.stateManager.clearPermanentDismissal();
+    }
   }
 
   suggestionsClick(e) {

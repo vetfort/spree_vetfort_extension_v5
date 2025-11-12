@@ -3,6 +3,7 @@ import { Controller } from "@hotwired/stimulus";
 import { TOPICS } from "./constants";
 import { ScrollManager } from "./services/scroll_manager";
 import { chatApi } from "./services/api";
+import { ChatStateManager } from "./services/chat_state_manager";
 export default class extends Controller {
   static targets = [
     "messages",
@@ -18,6 +19,7 @@ export default class extends Controller {
   ];
 
   connect() {
+    this.stateManager = new ChatStateManager();
     this.openInitialComponent();
     this.subscribeToPubSub();
 
@@ -76,23 +78,16 @@ export default class extends Controller {
   }
 
   closeHeroCta() {
+    this.stateManager.closeForSession();
     this.openChatButtonTarget.classList.remove("hidden");
     this.heroWindowTarget.classList.add("hidden");
-    sessionStorage.setItem('close_for_this_session', 'true');
   }
 
   openInitialComponent() {
-    const dontShowAgain = localStorage.getItem('dont_show_ai_consultant_cta');
-    const closeForThisSession = sessionStorage.getItem('close_for_this_session');
-
-    if (closeForThisSession && closeForThisSession === 'true') {
-      this.openChatButtonTarget.classList.remove("hidden");
+    if (this.stateManager.shouldShowHero()) {
+      this.heroWindowTarget.classList.remove("hidden");
     } else {
-      if (dontShowAgain && dontShowAgain === 'true') {
-        this.openChatButtonTarget.classList.remove("hidden");
-      } else {
-        this.heroWindowTarget.classList.remove("hidden");
-      }
+      this.openChatButtonTarget.classList.remove("hidden");
     }
   }
 
@@ -105,37 +100,19 @@ export default class extends Controller {
     this.beginRequest(text);
   }
 
-  appendSystemMessage(text) {
-    this.appendMessage(text, "system");
-  }
-
   appendUserMessage(text) {
     const tpl = document.getElementById("ai-chat-message-user");
-    if (tpl) {
-      const node = tpl.content.firstElementChild.cloneNode(true);
-      const contentEl = node.querySelector('[data-ai-chat-content]');
-      const ts = node.querySelector('[data-ai-chat-timestamp]');
-      if (contentEl) contentEl.textContent = text;
-      if (ts) ts.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      this.messagesTarget.appendChild(node);
+    if (!tpl) {
+      console.error("User message template not found");
       return;
     }
-    this.appendMessage(text, "user");
-  }
 
-  appendMessage(text, role) {
-    const wrapper = document.createElement("div");
-    wrapper.className = role === "user" ? "text-right mb-2" : "text-left mb-2";
-
-    const bubble = document.createElement("div");
-    bubble.className =
-      role === "user"
-        ? "inline-block bg-blue-100 text-blue-900 px-3 py-2 rounded-lg"
-        : "inline-block bg-gray-100 text-gray-900 px-3 py-2 rounded-lg";
-
-    bubble.textContent = text;
-    wrapper.appendChild(bubble);
-    this.messagesTarget.appendChild(wrapper);
+    const node = tpl.content.firstElementChild.cloneNode(true);
+    const contentEl = node.querySelector('[data-ai-chat-content]');
+    const ts = node.querySelector('[data-ai-chat-timestamp]');
+    if (contentEl) contentEl.textContent = text;
+    if (ts) ts.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    this.messagesTarget.appendChild(node);
   }
 
   async beginRequest(message) {

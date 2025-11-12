@@ -4,4 +4,9 @@ const TOPICS = {
   HERO_INPUT_CLICK: 'HERO_INPUT_CLICK',
 }
 
-export { TOPICS };
+const STORAGE_KEYS = {
+  DONT_SHOW_AGAIN: 'dont_show_ai_consultant_cta',
+  CLOSED_FOR_SESSION: 'close_for_this_session'
+};
+
+export { TOPICS, STORAGE_KEYS };
