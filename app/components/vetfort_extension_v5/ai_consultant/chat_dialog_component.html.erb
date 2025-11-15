@@ -1,24 +1,22 @@
 <div
-    class="flex flex-col items-center hidden mb-4 space-y-2 shadow-md
-    vetfort--ai-consultant__dialog"
+    class="vetfort--ai-consultant__dialog hidden"
     data-ai-chat-target="dialog"
   >
-    <%= turbo_frame_tag "vetfort-ai-chat", data: { action: "turbo:frame-load->ai-chat#scrollToBottom" } do %>
-        <%= turbo_stream_from turbo_stream_identifier %>
-        <div class="w-[28rem] md:w-[40rem]">
-        <div class="vetfort--ai-consultant__dialog-content">
-          <div id="ai-scroll" class="p-3 h-full overflow-y-auto" role="log" aria-live="polite" aria-relevant="additions" data-ai-chat-target="scroll">
-            <div id="<%= messages_target_id %>" class="min-h-full flex flex-col justify-end gap-3" data-ai-chat-target="messages"></div>
-            <%= render 'spree/ai_consultant/typing_indicator' %>
-          </div>
+  <%= turbo_frame_tag "vetfort-ai-chat",
+    class: "w-[28rem] md:w-[40rem]",
+    data: {
+      action: "turbo:frame-load->ai-chat#scrollToBottom"
+    } do %>
 
-          <%= render VetfortExtensionV5::AiConsultant::ChatFormComponent.new %>
+    <%= turbo_stream_from turbo_stream_identifier %>
+    <div class="vetfort--ai-consultant__dialog-content">
+      <%= render VetfortExtensionV5::AiConsultant::MessagesHistoryComponent.new(messages_target_id:) %>
+      <%= render VetfortExtensionV5::AiConsultant::ChatFormComponent.new %>
 
-          <!-- Templates for client-side message rendering using the same partials -->
-          <template id="ai-chat-message-user">
-            <%= render 'spree/ai_consultant/customer_message', text: '', time: '' %>
-          </template>
-        </div>
-      </div>
-    <% end %>
-  </div>
+      <!-- Templates for client-side message rendering using the same partials -->
+      <template id="ai-chat-message-user">
+        <%= render 'spree/ai_consultant/customer_message', text: '', time: '' %>
+      </template>
+    </div>
+  <% end %>
+</div>
