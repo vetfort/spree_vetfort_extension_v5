@@ -1,5 +1,24 @@
-<div id="ai-scroll" class="p-3 h-full overflow-y-auto" role="log" aria-live="polite" aria-relevant="additions" data-ai-chat-target="scroll">
-  <div id="<%= messages_target_id %>" class="min-h-full flex flex-col justify-end gap-3" data-ai-chat-target="messages"></div>
+<div
+  id="ai-scroll"
+  class="p-3 h-full overflow-y-auto"
+  role="log"
+  aria-live="polite"
+  aria-relevant="additions"
+  data-controller="ai-chat--message-history"
+  data-ai-chat--message-history-target="scroll"
+>
+  <div class="min-h-full flex flex-col justify-end">
+    <div
+      id="<%= messages_target_id %>"
+      data-ai-chat--message-history-target="messages"
+      class="flex flex-col gap-3"
+    >
+      <% display_messages.each do |message| %>
+        <%= render message %>
+      <% end %>
+    </div>
 
-  <%= render 'spree/ai_consultant/typing_indicator' %>
+    <%= render 'spree/ai_consultant/typing_indicator' %>
+  </div>
 </div>
+<%= render VetfortExtensionV5::AiConsultant::ChatFormComponent.new(conversation: conversation) %>

@@ -1,18 +1,18 @@
-<%= form_with url: helpers.ai_consultant_index_path,
+<%= form_with url: helpers.ai_conversation_ai_messages_path(conversation.id),
               method: :post,
-              data: { turbo: false, controller: nil, action: "submit->ai-chat#submit" },
-              html: { class: "border-t p-2 flex items-center gap-2", autocomplete: "off", "data-ai-chat-target": "form" } do %>
+              data: { controller: 'ai-chat--form', action: "submit->ai-chat--form#submit" },
+              html: { class: "border-t p-2 flex items-center gap-2", "data-ai-chat--form-target": "form" } do %>
 
   <div class="vetfort--ai-consultant__welcome-component-input">
-    <%= text_area_tag :message, nil,
+    <%= text_area_tag :content, nil,
         rows: 4,
         placeholder: "Ask me anything…",
         class: "vetfort--ai-consultant__welcome-component-input-textarea",
-        data: { "ai-chat-target": "input" } %>
+        data: { "ai-chat--form-target": "input" } %>
 
     <%= button_tag type: "submit",
       class: "vetfort--ai-consultant__welcome-component-input-button",
-      data: { "ai-chat-target": "sendButton" } do %>
+      data: { "ai-chat--form-target": "sendButton" } do %>
       <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
         <path fill-rule="evenodd" d="M12 2a1 1 0 0 1 .932.638l7 18a1 1 0 0 1-1.326 1.281L13 19.517V13a1 1 0 1 0-2 0v6.517l-5.606 2.402a1 1 0 0 1-1.326-1.281l7-18A1 1 0 0 1 12 2Z" clip-rule="evenodd"/>
       </svg>

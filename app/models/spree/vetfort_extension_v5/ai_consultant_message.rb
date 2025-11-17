@@ -1,6 +1,8 @@
 class Spree::VetfortExtensionV5::AiConsultantMessage < ApplicationRecord
   self.table_name = 'ai_consultant_messages'
 
+  default_scope { order(created_at: :asc) }
+
   belongs_to :conversation,
              class_name: 'Spree::VetfortExtensionV5::AiConsultantConversation',
              foreign_key: :ai_consultant_conversation_id,

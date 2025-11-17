@@ -2,7 +2,7 @@ require 'faker'
 
 module Spree
   module SpreeVetfortExtensionV5
-    class AiConsultantController < Spree::StoreController
+    class AiConversationsController < Spree::StoreController
       before_action :ensure_guest_uuid, :set_variant
       before_action :find_or_create_conversation
       before_action :set_conversations
@@ -20,6 +20,19 @@ module Spree
 
         # Enqueue background job; Turbo stream subscription will receive reply
         AiChatJob.perform_later(@conversation.id)
+      end
+
+      def active_conversation
+        @conversation = conversation_finder.last_active_or_new_conversation
+
+        html = render_to_string(
+          ::VetfortExtensionV5::AiConsultant::MessagesHistoryComponent.new(
+            messages_target_id: messages_target_id,
+            conversation: @conversation
+          )
+        )
+
+        render turbo_stream: turbo_stream.replace('messages-history', html: html)
       end
 
       private
@@ -46,6 +59,11 @@ module Spree
 
       def ai_consultant_params
         params.require(:ai_consultant).permit(:message)
+      end
+
+      def messages_target_id
+        user_identifier = current_user ? "user:#{current_user.id}" : "guest:#{guest_uuid}"
+        ['ai_consultant', user_identifier, 'ai-messages'].join(':')
       end
     end
   end
