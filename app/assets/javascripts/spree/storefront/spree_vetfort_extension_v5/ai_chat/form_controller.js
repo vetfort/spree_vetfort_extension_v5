@@ -15,6 +15,23 @@ export default class extends Controller {
     const { PubSub } = window.VetfortDeps || {};
     if (!PubSub) { console.warn("PubSub not loaded"); }
     this.pubsub = PubSub;
+
+    this.keydownHandler = this.keydownHandler.bind(this);
+
+    this.inputTarget.addEventListener("keydown", this.keydownHandler);
+  }
+
+  disconnect() {
+    if (this.keydownHandler && this.hasInputTarget) {
+      this.inputTarget.removeEventListener("keydown", this.keydownHandler);
+    }
+  }
+
+  keydownHandler(event) {
+    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+      event.preventDefault();
+      this.formTarget.requestSubmit();
+    }
   }
 
   submit(event) {
