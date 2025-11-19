@@ -4,7 +4,6 @@ module Spree
   module SpreeVetfortExtensionV5
     class AiConversationsController < Spree::StoreController
       before_action :ensure_guest_uuid, :set_variant
-      before_action :find_or_create_conversation
       before_action :set_conversations
 
       helper_method :guest_uuid
@@ -13,12 +12,12 @@ module Spree
       end
 
       def create
-        @message = ai_consultant_params[:message]
+        ActiveRecord::Base.transaction do
+          @conversation = conversation_finder.new_conversation
+          @message = ai_consultant_params[:content]
+          @conversation.append_message(role: 'user', content: @message)
+        end
 
-        # Persist user message
-        @conversation.append_message(role: 'user', content: @message)
-
-        # Enqueue background job; Turbo stream subscription will receive reply
         AiChatJob.perform_later(@conversation.id)
       end
 
@@ -45,10 +44,6 @@ module Spree
         cookies.signed[:vetfort_guest_uuid]
       end
 
-      def find_or_create_conversation
-        @conversation = conversation_finder.last_active_or_new_conversation
-      end
-
       def set_conversations
         @conversations = conversation_finder.all_for_user
       end
@@ -58,7 +53,7 @@ module Spree
       end
 
       def ai_consultant_params
-        params.require(:ai_consultant).permit(:message)
+        params.require(:ai_conversation).permit(:content)
       end
 
       def messages_target_id

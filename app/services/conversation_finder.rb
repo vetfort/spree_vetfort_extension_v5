@@ -22,6 +22,13 @@ class ConversationFinder < ApplicationService
       .includes(:messages)
   end
 
+  def new_conversation
+    Spree::VetfortExtensionV5::AiConsultantConversation.create!(
+      user_identifier: user_identifier,
+      last_activity_at: Time.current
+    )
+  end
+
   private
 
   def user_identifier

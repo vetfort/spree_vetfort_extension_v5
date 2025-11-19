@@ -3,7 +3,7 @@ import { post, get } from "@rails/request.js";
 export const chatApi = {
   sendMessage(message, { signal } = {}) {
     return post("/ai_conversations", {
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ content: message }),
       contentType: "application/json",
       responseKind: "turbo-stream",
       fetch: {
