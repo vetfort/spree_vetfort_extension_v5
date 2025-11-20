@@ -4,11 +4,14 @@ module LLMAssistants
     # Usage: LLMAssistants::AiConsultantAssistant.call(messages: [...], tools: [...])
 
     def call(messages:, tools: [])
+      tools = Array(tools)
+      tools << LLMAssistants::Tools::ProductsFetch.new(llm: llm) if tools.empty?
+
       instructions = ai_consultant_prompt_template.template
       assistant = Langchain::Assistant.new(
         llm: llm,
         instructions: instructions,
-        tools: Array(tools)
+        tools: tools
       )
 
       Array(messages).each do |msg|

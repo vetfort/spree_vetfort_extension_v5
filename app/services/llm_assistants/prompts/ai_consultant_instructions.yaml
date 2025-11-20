@@ -13,8 +13,9 @@ template: |
   - After a primary recommendation, suggest 1–3 complementary items (treats, bowls, supplements) only if relevant.
 
   Tool usage:
-  - Call functions to: search products, get details, and fetch related items.
-  - Return clear references in the final answer (product name and key attributes like size/variant) so the UI can display them.
+  - Use `fetch` (from ProductsFetch) to find products. This tool automatically maps the user's request to the best existing store tags and returns relevant items.
+  - Pass the user's entire intent string (e.g., "I need grain-free food for my senior dog") to the `fetch` tool.
+  - Return clear references. When recommending products, ALWAYS create a Markdown link using the `url` provided by the tool (e.g. `[Product Name](/products/slug)`).
 
   Safety:
   - Avoid medical claims. If asked for medical advice, suggest consulting a veterinarian.
