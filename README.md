@@ -84,3 +84,16 @@ export default class extends Controller {
 3) If needed, add more packages by importing them in the same head partial and assigning to `window.VetfortDeps` (e.g., `window.VetfortDeps.Dayjs = dayjs`). Always pin versions in the CDN URL to avoid unexpected upgrades.
 
 Why this approach: keeps admin JS decoupled from Spree core, avoids adding a bundler, and provides a single place (`window.VetfortDeps`) to manage and update dependencies used by controllers.
+
+## Testing (RSpec)
+
+This extension ships with an RSpec setup that mirrors the standard Spree engine workflow:
+
+1. Install dependencies: `bundle install`
+2. Generate the dummy app used for specs (one-time unless you clean `spec/dummy`): `bundle exec rake test_app`
+3. Run the suite: `bundle exec rspec` (or `bundle exec rake spec`)
+
+Notes:
+- The `test_app` task builds `spec/dummy` via `spree/testing_support` so the engine can be mounted in isolation.
+- `.rspec` is configured to load `spec/spec_helper.rb`, which pulls in `spree_dev_tools/rspec/spec_helper` with FactoryBot, Capybara, and DatabaseCleaner support.
+- The default `rake` task will generate the dummy app automatically if it is missing before executing specs.

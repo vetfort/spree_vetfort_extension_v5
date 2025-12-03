@@ -4,8 +4,14 @@ class CreateAiConsultantMessages < ActiveRecord::Migration[7.2]
       t.references :ai_consultant_conversation, null: false, foreign_key: true, index: true
       t.string :role, null: false
       t.text :content, null: false
-      t.jsonb :tool_calls, null: true, default: {}
-      t.jsonb :token_usage, null: true, default: {}
+
+      if ActiveRecord::Base.connection.adapter_name =~ /sqlite/i
+        t.json :tool_calls, null: true, default: {}
+        t.json :token_usage, null: true, default: {}
+      else
+        t.jsonb :tool_calls, null: true, default: {}
+        t.jsonb :token_usage, null: true, default: {}
+      end
 
       t.timestamps
     end
