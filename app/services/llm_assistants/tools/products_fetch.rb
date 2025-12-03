@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 # LLMAssistants::Tools::ProductsFetch
 
+require "bigdecimal"
+
 module LLMAssistants
   module Tools
     class ProductsFetch
       extend ::Langchain::ToolDefinition
 
-      define_function :fetch, description: "Fetches products by mapping user intent to existing tags." do
+      define_function :fetch, description: "Fetches products by mapping user intent to AI tags." do
         property :user_intent, type: "string", description: "The user's search query or intent (e.g. 'food for my puppy')."
       end
 
@@ -17,53 +19,23 @@ module LLMAssistants
       end
 
       def fetch(user_intent:)
-        # 1. Retrieve all available tags to provide context
-        available_tags = Rails.cache.fetch('ai_consultant:available_tags', expires_in: 1.hour) do
-          ActsAsTaggableOn::Tag.distinct.for_context(:tags).pluck(:name).join(", ")
-        end
-
-        if available_tags.blank?
-          # Fallback if no tags exist: basic search
-          return fallback_search(user_intent)
-        end
-
-        # 2. Ask LLM to select relevant tags
         prompt = products_prompt_template.format(
           user_intent: user_intent,
-          available_tags: available_tags
+          ai_dimensions: ai_dimensions_description
         )
 
-        # Using a temporary chat to get the JSON response
         response = llm.chat(
           messages: [{ role: "user", content: prompt }],
           response_format: { type: "json_object" }
         ).completion
 
         parsed_response = JSON.parse(response)
-        selected_tags = parsed_response["selected_tags"] || []
+        ai_tags = parsed_response["ai_tags"] || {}
 
-        # 3. Fetch products matching those tags
-        # Using 'match_all: true' for stricter relevance, or fallback to ANY if needed.
-        # We also add a keyword search layer for things like Brand names if tags miss them.
-        scope = Spree::Product.includes(:master, :taxons, :variants)
+        products = search_products(ai_tags)
+        return JSON.generate(products) if products.any?
 
-        if selected_tags.any?
-          # Adjust syntax based on your tagging library. usually:
-          scope = scope.tagged_with(selected_tags)
-        end
-
-        # Limit results to keep context small
-        products = scope.limit(10).map do |product|
-          {
-            id: product.id,
-            name: product.name,
-            price: product.display_price.to_s,
-            url: "/products/#{product.slug}",
-            tags: product.tag_list.to_a
-          }
-        end
-
-        JSON.generate(products)
+        fallback_search(user_intent)
       rescue => e
         Langchain.logger.error("ProductsFetch error: #{e.message}")
         JSON.generate([])
@@ -77,12 +49,79 @@ module LLMAssistants
         )
       end
 
+      def ai_dimensions_description
+        AiSearchable::Config.to_llm_schema.map do |dimension, cfg|
+          if cfg[:type] == "enum"
+            values = Array(cfg[:values]).join(', ')
+            multiplicity = cfg[:multiple] ? "multiple allowed" : "single value"
+            "- #{dimension}: choose #{multiplicity} from [#{values}]"
+          else
+            "- #{dimension}: free-form string (single value)"
+          end
+        end.join("\n")
+      end
+
+      def search_products(ai_tags)
+        search_params = build_search_params(ai_tags)
+        return [] if search_params.values.all?(&:blank?)
+
+        ProductSearch.new(**search_params, limit: 10).call.map do |product|
+          serialize_product(product)
+        end
+      end
+
+      def build_search_params(ai_tags)
+        {
+          species: normalize_list(ai_tags["species"]),
+          format: normalize_tag_value(ai_tags["format"]),
+          diet: normalize_tag_value(ai_tags["diet"]),
+          problems: normalize_list(ai_tags["problems"]),
+          brand: normalize_free_value(ai_tags["brand"]),
+          max_price: normalize_price(ai_tags["max_price"])
+        }
+      end
+
+      def normalize_list(values)
+        Array(values).compact_blank.map { |v| AiSearchable::TagFormat.normalize_value(v) }
+      end
+
+      def normalize_tag_value(value)
+        return if value.blank?
+
+        AiSearchable::TagFormat.normalize_value(value)
+      end
+
+      def normalize_free_value(value)
+        value.to_s.strip.presence
+      end
+
+      def normalize_price(value)
+        return if value.blank?
+
+        BigDecimal(value.to_s)
+      rescue ArgumentError
+        nil
+      end
+
+      def serialize_product(product)
+        {
+          id: product.id,
+          name: product.name,
+          price: product.display_price.to_s,
+          url: "/products/#{product.slug}",
+          tags: product.tag_list.to_a
+        }
+      end
+
       def fallback_search(query)
         products = Spree::Product.active
                                  .ransack(name_or_description_cont: query)
                                  .result
                                  .limit(5)
-                                 .map { |p| { id: p.id, name: p.name, price: p.display_price.to_s } }
+                                 .map do |product|
+          serialize_product(product)
+        end
+
         JSON.generate(products)
       end
     end

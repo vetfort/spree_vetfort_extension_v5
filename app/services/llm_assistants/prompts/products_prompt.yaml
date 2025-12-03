@@ -1,22 +1,27 @@
 _type: prompt
-input_variables: ["user_intent", "available_tags"]
+input_variables: ["user_intent", "ai_dimensions"]
 template: |
   You are a tag selector for a pet supply store product search.
-  Your goal is to map the user's search intent to the most relevant existing tags from the provided list.
+  Map the user's search intent to structured AI tags by choosing values for each dimension.
 
   User Search Intent: "{user_intent}"
 
-  List of Available Tags:
-  {available_tags}
+  AI tag dimensions and allowed values:
+  {ai_dimensions}
 
   Instructions:
-  1. Analyze the user's intent to understand what they are looking for (e.g., species, product type, diet, age).
-  2. Select ONLY tags from the "List of Available Tags" that perfectly match these criteria.
-  3. Do not invent new tags. Use exact matches only.
-  4. If the user mentions a specific brand or attribute not in the tags, ignore it for tag selection (the system will handle keywords separately).
-  5. Return a JSON object with a single key "selected_tags" containing the array of strings.
+  1. Prefer the closest matching values from the allowed list; do not invent new values for enum dimensions.
+  2. For free-form dimensions, provide a concise, normalized value (lowercase, underscores instead of spaces).
+  3. If a dimension is not mentioned or is unclear, leave it empty or omit it.
+  4. Return a JSON object with a single key "ai_tags" containing the chosen values.
 
-  Example Output:
+  Expected JSON shape:
   {{
-    "selected_tags": ["dog", "dry food", "senior"]
+    "ai_tags": {{
+      "species": ["dog"],
+      "format": "dry",
+      "diet": "premium",
+      "problems": ["allergy"],
+      "brand": "acme"
+    }}
   }}
