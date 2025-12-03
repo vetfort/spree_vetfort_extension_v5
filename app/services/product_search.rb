@@ -25,22 +25,6 @@ class ProductSearch
 
   private
 
-  def base_scope
-    Spree::Product.includes(master: :prices)
-  end
-
-  def apply_limit(scope)
-    return scope if limit.blank?
-
-    scope.limit(limit)
-  end
-
-  def build_tags(dimension, values)
-    Array.wrap(values).compact_blank.map do |value|
-      AiSearchable::TagFormat.build(dimension, value)
-    end
-  end
-
   def filter_species(scope)
     return scope if species.blank?
 
@@ -77,5 +61,21 @@ class ProductSearch
     scope
       .joins(master: :prices)
       .where(Spree::Price.arel_table[:amount].lteq(max_price))
+  end
+
+  def apply_limit(scope)
+    return scope if limit.blank?
+
+    scope.limit(limit)
+  end
+
+  def base_scope
+    Spree::Product.includes(master: :prices)
+  end
+
+  def build_tags(dimension, values)
+    Array.wrap(values).compact_blank.map do |value|
+      AiSearchable::TagFormat.build(dimension, value)
+    end
   end
 end
