@@ -1,0 +1,39 @@
+ai_searchable:
+  species:
+    values:
+      - dog
+      - cat
+      - parrot
+      - rodent
+      - other
+
+  format:
+    values:
+      - dry
+      - wet
+      - treat
+      - supplement
+
+  diet:
+    values:
+      - normal
+      - premium
+      - super_premium
+      - vet
+
+  problem:
+    values:
+      - skin
+      - renal
+      - gi
+      - urinary
+      - joints
+      - allergy
+      - weight
+      - liver
+      - immune
+      - behavior
+      - cancer
+
+  brand:
+    allow_any: true
