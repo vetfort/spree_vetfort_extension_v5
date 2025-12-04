@@ -19,7 +19,7 @@ ai_searchable:
       - normal
       - premium
       - super_premium
-      - vet
+      - veterinary
 
   problem:
     values:

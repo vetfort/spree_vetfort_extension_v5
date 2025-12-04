@@ -34,13 +34,13 @@ class ProductSearch
   def filter_format(scope)
     return scope if format.blank?
 
-    scope.tagged_with(AiSearchable::TagFormat.build("format", format))
+    scope.tagged_with(build_tags("format", format))
   end
 
   def filter_diet(scope)
     return scope if diet.blank?
 
-    scope.tagged_with(AiSearchable::TagFormat.build("diet", diet))
+    scope.tagged_with(build_tags("diet", diet))
   end
 
   def filter_problems(scope)

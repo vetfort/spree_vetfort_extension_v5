@@ -73,8 +73,8 @@ module LLMAssistants
       def build_search_params(ai_tags)
         {
           species: normalize_list(ai_tags["species"]),
-          format: normalize_tag_value(ai_tags["format"]),
-          diet: normalize_tag_value(ai_tags["diet"]),
+          format: normalize_list(ai_tags["format"]),
+          diet: normalize_list(ai_tags["diet"]),
           problems: normalize_list(ai_tags["problems"]),
           brand: normalize_free_value(ai_tags["brand"]),
           max_price: normalize_price(ai_tags["max_price"])
@@ -106,10 +106,9 @@ module LLMAssistants
       def serialize_product(product)
         {
           id: product.id,
-          name: product.name,
+          name: product.name_en,
           price: product.display_price.to_s,
-          url: "/products/#{product.slug}",
-          tags: product.tag_list.to_a
+          url: "/products/#{product.slug_en}"
         }
       end
 
