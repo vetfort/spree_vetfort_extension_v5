@@ -10,10 +10,18 @@ class AiChatJob < ApplicationJob
                            .pluck(:role, :content)
                            .map { |role, content| { role: role, content: content } }
 
-    responses = LLMAssistants::AiConsultantAssistant.new.call(messages: history)
-    assistant_text = Array(responses).last&.dig(:content).to_s
+    result = LLMAssistants::AiConsultantAssistant.call(messages: history)
+    payload = Array(result).last || {}
+    assistant_text = payload[:text].to_s.presence || payload[:content].to_s
+    products = Array(payload[:products])
+    raw_json = payload[:content].to_s
 
-    conversation.append_message(role: 'assistant', content: assistant_text)
+    message = conversation.messages.create!(
+      role: 'assistant',
+      content: assistant_text,
+      products: products,
+      raw_json: raw_json
+    )
 
     Turbo::StreamsChannel.broadcast_append_to(
       "ai_consultant:#{conversation.user_identifier}",
@@ -21,10 +29,17 @@ class AiChatJob < ApplicationJob
       partial: 'spree/ai_consultant/bot_message',
       locals: { text: assistant_text }
     )
+
+    Turbo::StreamsChannel.broadcast_replace_to(
+      "ai_consultant:#{conversation.user_identifier}",
+      target: "ai_consultant:#{conversation.user_identifier}:ai-products",
+      partial: 'spree/ai_consultant/products_grid',
+      locals: { products: message.products }
+    )
   rescue => e
     Langchain.logger.error("AiChatJob error: #{e.class}: #{e.message}")
     fallback = "I'm having trouble right now. Please try again later."
-    conversation&.append_message(role: 'assistant', content: fallback)
+    conversation&.messages&.create!(role: 'assistant', content: fallback, products: [])
     Turbo::StreamsChannel.broadcast_append_to(
       "ai_consultant:#{conversation_id}",
       target: 'ai-messages',

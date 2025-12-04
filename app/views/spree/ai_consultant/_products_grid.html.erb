@@ -1,0 +1,23 @@
+<% products = Array(local_assigns[:products]) %>
+<% if products.present? %>
+  <div class="ai-products-grid">
+    <% products.each do |p| %>
+      <% pid = p["product_id"] || p[:product_id] %>
+      <% reason = p["reason"] || p[:reason] %>
+      <div class="ai-product-card" data-product-id="<%= pid %>">
+        <div class="ai-product-info">
+          <div class="ai-product-title">
+            Product #<%= pid %>
+          </div>
+          <% if reason.present? %>
+            <div class="ai-product-reason">
+              <%= reason %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="ai-products-empty"></div>
+<% end %>
