@@ -6,6 +6,7 @@ require "bigdecimal"
 module LLMAssistants
   module Tools
     class ProductsFetch
+      include Spree::Core::Engine.routes.url_helpers
       extend ::Langchain::ToolDefinition
 
       define_function :fetch, description: "Fetches products by mapping user intent to AI tags." do
@@ -108,7 +109,7 @@ module LLMAssistants
           id: product.id,
           name: product.name_en,
           price: product.display_price.to_s,
-          url: "/products/#{product.slug_en}"
+          url: product_url(product, host: host)
         }
       end
 
@@ -122,6 +123,10 @@ module LLMAssistants
         end
 
         JSON.generate(products)
+      end
+ 
+      def host
+        @host ||= Spree::Store.default.url
       end
     end
   end
