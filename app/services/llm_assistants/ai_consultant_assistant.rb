@@ -1,6 +1,7 @@
 module LLMAssistants
   class AiConsultantAssistant < ApplicationService
     # Orchestrates the AI shopping consultant conversation.
+    # Returns JSON with structured text and products
     # Usage: LLMAssistants::AiConsultantAssistant.call(messages: [...], tools: [...])
 
     def call(messages:, tools: [])
@@ -33,10 +34,11 @@ module LLMAssistants
         assistant.add_message_and_run!(content: content.to_s) if content.present?
       end
 
-      normalize_assistant_messages(assistant.messages)
+      parse_structured_response(assistant.messages)
     rescue => e
       Langchain.logger.error("AiConsultantAssistant error: #{e.class}: #{e.message}")
-      [{ role: 'assistant', content: "I'm having trouble right now. Please try again in a moment." }]
+      fallback_text = "I'm having trouble right now. Please try again in a moment."
+      [{ role: 'assistant', content: fallback_text, text: fallback_text, products: [] }]
     end
 
     private
@@ -44,7 +46,11 @@ module LLMAssistants
     def llm
       @llm ||= Langchain::LLM::OpenAI.new(
         api_key: ENV['OPENAI_API_KEY'],
-        default_options: { model: 'gpt-4o-mini', temperature: 0.3 }
+        default_options: {
+          model: 'gpt-4o-mini',
+          temperature: 0.3,
+          response_format: { type: 'json_object' }
+        }
       )
     end
 
@@ -54,11 +60,28 @@ module LLMAssistants
       )
     end
 
-    def normalize_assistant_messages(messages)
-      Array(messages)
-        .select { |m| m.role.to_s == 'assistant' }
-        .map { |m| { role: 'assistant', content: m.content.to_s } }
-        .last(1) # only the latest response is needed for broadcast
+    def parse_structured_response(messages)
+      assistant_message = Array(messages).find { |m| m.role.to_s == 'assistant' }
+      return fallback_response unless assistant_message
+
+      response_content = assistant_message.content.to_s
+      
+      begin
+        parsed = JSON.parse(response_content)
+        text = parsed['text'].to_s
+        products = Array(parsed['products']).compact
+        
+        [{ role: 'assistant', content: response_content, text: text, products: products }]
+      rescue JSON::ParserError => e
+        Langchain.logger.warn("Failed to parse JSON response: #{e.message}")
+        Langchain.logger.warn("Response was: #{response_content}")
+        fallback_response
+      end
+    end
+
+    def fallback_response
+      fallback_text = "I'm having trouble right now. Please try again in a moment."
+      [{ role: 'assistant', content: fallback_text, text: fallback_text, products: [] }]
     end
   end
 end
