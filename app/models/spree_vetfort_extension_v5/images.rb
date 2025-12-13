@@ -18,4 +18,8 @@ class SpreeVetfortExtensionV5::Images
   def self.bot_avatar
     'https://res.cloudinary.com/domsefhf3/image/upload/v1759546675/bot_avatar_lycal9.png'
   end
+
+  def self.product_no_image_placeholder
+    'https://res.cloudinary.com/domsefhf3/image/upload/v1765522432/product_no_image_n08auz.png'
+  end
 end

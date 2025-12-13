@@ -17,7 +17,7 @@ module VetfortExtensionV5
           when 'user'
             VetfortExtensionV5::AiConsultant::CustomerMessageComponent.new(text: message.content, time: message.created_at.strftime('%H:%M'))
           when 'assistant'
-            VetfortExtensionV5::AiConsultant::BotMessageComponent.new(text: message.content, time: message.created_at.strftime('%H:%M'))
+            VetfortExtensionV5::AiConsultant::BotMessageComponent.new(text: message.content, time: message.created_at.strftime('%H:%M'), products: message.products)
           end
         end
       end

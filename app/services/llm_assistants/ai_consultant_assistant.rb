@@ -4,6 +4,10 @@ module LLMAssistants
     # Returns JSON with structured text and products
     # Usage: LLMAssistants::AiConsultantAssistant.call(messages: [...], tools: [...])
 
+    def self.call(messages:, tools: [])
+      new.call(messages: messages, tools: tools)
+    end
+
     def call(messages:, tools: [])
       tools = Array(tools)
       tools << LLMAssistants::Tools::ProductsFetch.new(llm: llm) if tools.empty?
@@ -61,7 +65,7 @@ module LLMAssistants
     end
 
     def parse_structured_response(messages)
-      assistant_message = Array(messages).find { |m| m.role.to_s == 'assistant' }
+      assistant_message = Array(messages).select { |m| m.assistant? }.last
       return fallback_response unless assistant_message
 
       response_content = assistant_message.content.to_s

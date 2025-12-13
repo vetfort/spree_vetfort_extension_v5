@@ -10,6 +10,10 @@ module VetfortExtensionV5
         @turbo_stream_identifier = turbo_stream_identifier
         @messages_target_id = messages_target_id
       end
+
+      def products_target_id
+        "#{turbo_stream_identifier}:ai-products"
+      end
     end
   end
 end

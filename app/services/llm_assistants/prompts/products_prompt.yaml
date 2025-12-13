@@ -11,9 +11,14 @@ template: |
 
   Instructions:
   1. Prefer the closest matching values from the allowed list; do not invent new values for enum dimensions.
-  2. For free-form dimensions, provide a concise, normalized value (lowercase, underscores instead of spaces).
-  3. If a dimension is not mentioned or is unclear, leave it empty or omit it.
-  4. Return a JSON object with a single key "ai_tags" containing the chosen values.
+    2. For free-form dimensions, provide a concise, normalized value:
+      - lowercase only
+      - use underscores instead of spaces
+      - ASCII letters and digits only (transliterate any non-ASCII letters to their closest ASCII form; e.g., "ветэксперт" -> "vetexpert")
+      - remove punctuation and diacritics
+    3. For the `brand` dimension specifically: if the intent uses a brand variant (alias), normalize to the canonical brand from the allowed list (e.g., "vetexpert" -> "vet_expert", "piper" -> "piper_animals").
+    4. If a dimension is not mentioned or is unclear, leave it empty or omit it.
+    5. Return a JSON object with a single key "ai_tags" containing the chosen values.
 
   Expected JSON shape:
   {{

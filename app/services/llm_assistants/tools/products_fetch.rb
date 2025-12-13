@@ -77,7 +77,7 @@ module LLMAssistants
           format: normalize_list(ai_tags["format"]),
           diet: normalize_list(ai_tags["diet"]),
           problems: normalize_list(ai_tags["problems"]),
-          brand: normalize_free_value(ai_tags["brand"]),
+          brand: normalize_brand(ai_tags["brand"]),
           max_price: normalize_price(ai_tags["max_price"])
         }
       end
@@ -96,6 +96,14 @@ module LLMAssistants
         value.to_s.strip.presence
       end
 
+      def normalize_brand(value)
+        raw = normalize_free_value(value)
+        return if raw.blank?
+
+        normalized = AiSearchable::BrandNormalizer.new.normalize(raw)
+        normalized.presence
+      end
+
       def normalize_price(value)
         return if value.blank?
 
@@ -107,7 +115,7 @@ module LLMAssistants
       def serialize_product(product)
         {
           id: product.id,
-          name: product.name_en,
+          name: product_name(product),
           price: product.display_price.to_s,
           url: product_url(product, host: host)
         }
@@ -127,6 +135,10 @@ module LLMAssistants
  
       def host
         @host ||= Spree::Store.default.url
+      end
+
+      def product_name(product)
+        product.name || product.name_ru ||  product.name_ro || product.name_en
       end
     end
   end

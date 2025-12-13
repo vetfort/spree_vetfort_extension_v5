@@ -10,7 +10,7 @@ class AiChatJob < ApplicationJob
                            .pluck(:role, :content)
                            .map { |role, content| { role: role, content: content } }
 
-    result = LLMAssistants::AiConsultantAssistant.call(messages: history)
+    result = LLMAssistants::AiConsultantAssistant.new.call(messages: history)
     payload = Array(result).last || {}
     assistant_text = payload[:text].to_s.presence || payload[:content].to_s
     products = Array(payload[:products])
@@ -26,25 +26,27 @@ class AiChatJob < ApplicationJob
     Turbo::StreamsChannel.broadcast_append_to(
       "ai_consultant:#{conversation.user_identifier}",
       target: "ai_consultant:#{conversation.user_identifier}:ai-messages",
-      partial: 'spree/ai_consultant/bot_message',
-      locals: { text: assistant_text }
-    )
-
-    Turbo::StreamsChannel.broadcast_replace_to(
-      "ai_consultant:#{conversation.user_identifier}",
-      target: "ai_consultant:#{conversation.user_identifier}:ai-products",
-      partial: 'spree/ai_consultant/products_grid',
-      locals: { products: message.products }
+      renderable: VetfortExtensionV5::AiConsultant::BotMessageComponent.new(
+        text: message.content, 
+        time: message.created_at.strftime('%H:%M'), 
+        products: message.products
+      )
     )
   rescue => e
     Langchain.logger.error("AiChatJob error: #{e.class}: #{e.message}")
     fallback = "I'm having trouble right now. Please try again later."
-    conversation&.messages&.create!(role: 'assistant', content: fallback, products: [])
-    Turbo::StreamsChannel.broadcast_append_to(
-      "ai_consultant:#{conversation_id}",
-      target: 'ai-messages',
-      partial: 'spree/ai_consultant/bot_message',
-      locals: { text: fallback }
-    )
+    fallback_message = conversation&.messages&.create!(role: 'assistant', content: fallback, products: [])
+    
+    if fallback_message && conversation
+      Turbo::StreamsChannel.broadcast_append_to(
+        "ai_consultant:#{conversation.user_identifier}",
+        target: "ai_consultant:#{conversation.user_identifier}:ai-messages",
+        renderable: VetfortExtensionV5::AiConsultant::BotMessageComponent.new(
+          text: fallback,
+          time: fallback_message.created_at.strftime('%H:%M'),
+          products: []
+        )
+      )
+    end
   end
 end
