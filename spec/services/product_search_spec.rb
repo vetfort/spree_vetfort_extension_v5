@@ -14,7 +14,7 @@ RSpec.describe ProductSearch do
         format: 'dry',
         diet: 'premium',
         problems: %w[allergy],
-        brand: 'Vet Expert'
+        brand: 'vetexpert'
       }
     )
   end
@@ -28,7 +28,7 @@ RSpec.describe ProductSearch do
         format: 'wet',
         diet: 'normal',
         problems: %w[hairball],
-        brand: 'Piper Adult'
+        brand: 'piper'
       }
     )
   end
@@ -97,7 +97,7 @@ RSpec.describe ProductSearch do
     end
 
     context 'when filtering by brand' do
-      let(:params) { { brand: 'Vet Expert' } }
+      let(:params) { { brand: 'vetexpert' } }
 
       it 'returns products tagged with the brand' do
         expect(results).to contain_exactly(dog_food)

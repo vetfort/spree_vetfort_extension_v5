@@ -1,4 +1,5 @@
 require 'mjml-rails'
+require 'mrml'
 
 Mjml.setup do |config|
   config.template_language = :erb

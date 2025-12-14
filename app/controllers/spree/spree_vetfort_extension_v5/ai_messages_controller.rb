@@ -9,6 +9,12 @@ module Spree
         @conversation.append_message(role: 'user', content: @message)
 
         AiChatJob.perform_later(@conversation.id)
+
+        respond_to do |format|
+          format.turbo_stream { render turbo_stream: [], status: :accepted }
+          format.json { render json: { ok: true }, status: :accepted }
+          format.any { head :accepted }
+        end
       end
 
       private

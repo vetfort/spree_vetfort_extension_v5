@@ -4,6 +4,7 @@ RSpec.describe ProductAttributes do
   describe '#to_h' do
     let(:product) { create(:product) }
     let(:product_attributes) { described_class.new(product) }
+    let(:brand) { AiSearchable::BrandNormalizer.new.normalize('VetExpert') }
 
     def tag_product(dimension, value)
       tag_string = AiSearchable::TagFormat.build(dimension, value)
@@ -21,7 +22,7 @@ RSpec.describe ProductAttributes do
         tag_product('format', 'Dry ')
         tag_product('diet', 'super premium')
         tag_product_with_values('problem', %w[allergy allergy])
-        tag_product('brand', 'Vet Expert')
+        tag_product('brand', brand)
       end
 
       it 'returns normalized enum attributes and unique multi-valued dimensions' do
@@ -30,7 +31,7 @@ RSpec.describe ProductAttributes do
           format: :dry,
           diet: :super_premium,
           problems: %i[allergy],
-          brand: :vet_expert
+          brand: :vetexpert
         )
       end
     end

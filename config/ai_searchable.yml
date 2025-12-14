@@ -50,7 +50,7 @@ ai_searchable:
       - astor
       - catalysis_s_l
       - synergylabs
-      - piper_animals
+      - piper
       - mr_bandit
     aliases:
       vet_expert:
@@ -64,10 +64,12 @@ ai_searchable:
         - royalcanin
         - royal_canin
         - royal-canin
-      piper_animals:
-        - piper
+      piper:
         - piper_animals
         - piper-animals
+        - piper_adult 
+        - piper-adult
+        - piperadult
       ceva_animal_health:
         - ceva
         - ceva_animal_health

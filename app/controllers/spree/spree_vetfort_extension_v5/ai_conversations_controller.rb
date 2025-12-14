@@ -3,7 +3,7 @@ require 'faker'
 module Spree
   module SpreeVetfortExtensionV5
     class AiConversationsController < Spree::StoreController
-      before_action :ensure_guest_uuid, :set_variant
+      before_action :ensure_guest_uuid
       before_action :set_conversations
 
       helper_method :guest_uuid
@@ -19,19 +19,27 @@ module Spree
         end
 
         AiChatJob.perform_later(@conversation.id)
+
+        respond_to do |format|
+          format.turbo_stream { render turbo_stream: [], status: :accepted }
+          format.json { render json: { ok: true }, status: :accepted }
+          format.any { head :accepted }
+        end
       end
 
       def active_conversation
         @conversation = conversation_finder.last_active_or_new_conversation
 
-        html = render_to_string(
-          ::VetfortExtensionV5::AiConsultant::MessagesHistoryComponent.new(
-            messages_target_id: messages_target_id,
-            conversation: @conversation
-          )
-        )
-
-        render turbo_stream: turbo_stream.replace('messages-history', html: html)
+        render turbo_stream: [
+          turbo_stream.replace('messages-history') do
+            render_to_string(
+              ::VetfortExtensionV5::AiConsultant::MessagesHistoryComponent.new(
+                messages_target_id: messages_target_id,
+                conversation: @conversation
+              )
+            )
+          end
+        ]
       end
 
       private
@@ -49,15 +57,23 @@ module Spree
       end
 
       def conversation_finder
-        @conversation_finder ||= ConversationFinder.new(current_user: current_user, guest_uuid: guest_uuid)
+        @conversation_finder ||= ConversationFinder.new(
+          current_user: try(:current_spree_user) || try(:current_user),
+          guest_uuid: guest_uuid
+        )
       end
 
       def ai_consultant_params
-        params.require(:ai_conversation).permit(:content)
+        if params[:ai_conversation].present?
+          params.require(:ai_conversation).permit(:content)
+        else
+          params.permit(:content)
+        end
       end
 
       def messages_target_id
-        user_identifier = current_user ? "user:#{current_user.id}" : "guest:#{guest_uuid}"
+        user = try(:current_spree_user) || try(:current_user)
+        user_identifier = user ? "user:#{user.id}" : "guest:#{guest_uuid}"
         ['ai_consultant', user_identifier, 'ai-messages'].join(':')
       end
     end

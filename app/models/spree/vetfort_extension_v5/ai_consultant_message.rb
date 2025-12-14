@@ -19,11 +19,24 @@ class Spree::VetfortExtensionV5::AiConsultantMessage < ApplicationRecord
   validates :content, presence: true
   validate :validate_products_structure
 
+  before_validation :normalize_products, :normalize_role
+
   scope :with_products, -> { where.not(products: []) }
 
-  before_validation :normalize_role
-
   private
+
+  def normalize_products
+    case self.products
+    when nil
+      self.products = []
+    when String
+      self.products = JSON.parse(self.products) rescue []
+    when Array
+      # Already array, do nothing
+    else
+      self.products = []
+    end
+  end
 
   def normalize_role
     self.role = role.to_s if role.present?

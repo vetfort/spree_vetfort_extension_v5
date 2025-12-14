@@ -9,6 +9,8 @@ module VetfortExtensionV5
       def initialize(current_user:, cookies:)
         @current_user = current_user
         @cookies = cookies
+
+        ensure_guest_uuid!
       end
 
       private
@@ -23,6 +25,12 @@ module VetfortExtensionV5
 
       def user_identifier
         current_user ? "user:#{current_user.id}" : "guest:#{cookies.signed[:vetfort_guest_uuid]}"
+      end
+
+      def ensure_guest_uuid!
+        return if current_user.present?
+
+        cookies.permanent.signed[:vetfort_guest_uuid] ||= SecureRandom.uuid
       end
     end
   end
