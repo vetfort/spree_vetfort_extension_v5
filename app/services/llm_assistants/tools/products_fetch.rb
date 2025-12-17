@@ -20,6 +20,7 @@ module LLMAssistants
       end
 
       def fetch(user_intent:)
+        # binding.pry
         prompt = products_prompt_template.format(
           user_intent: user_intent,
           ai_dimensions: ai_dimensions_description
@@ -32,9 +33,15 @@ module LLMAssistants
 
         parsed_response = JSON.parse(response)
         ai_tags = parsed_response["ai_tags"] || {}
+        search_query = parsed_response["search_query"].to_s.strip
 
         products = search_products(ai_tags)
         return JSON.generate(products) if products.any?
+
+        if search_query.present? && search_query != user_intent
+          result = fallback_search(search_query)
+          return result unless result == "[]"
+        end
 
         fallback_search(user_intent)
       rescue => e
@@ -123,12 +130,15 @@ module LLMAssistants
 
       def fallback_search(query)
         products = Spree::Product.active
-                                 .ransack(name_or_description_cont: query)
-                                 .result
-                                 .limit(5)
-                                 .map do |product|
-          serialize_product(product)
-        end
+          .joins(:variants_including_master)
+          .joins("LEFT OUTER JOIN spree_product_translations ON spree_product_translations.spree_product_id = spree_products.id")
+          .where(
+            "LOWER(spree_product_translations.name) ILIKE :q OR LOWER(spree_variants.sku) ILIKE :q",
+            q: "%#{query.downcase}%"
+          )
+          .distinct
+          .limit(5)
+          .map { |product| serialize_product(product) }
 
         JSON.generate(products)
       end
