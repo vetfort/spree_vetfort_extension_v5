@@ -1,0 +1,15 @@
+<div class="vetfort--ai-consultant__admin-conversation-bot-message" >
+  <img class="vetfort--ai-consultant__admin-conversation-bot-message--avatar" src="<%= SpreeVetfortExtensionV5::Images.bot_avatar %>" alt="Jese image">
+  
+  <div class="vetfort--ai-consultant__admin-conversation-bot-message--content">
+    <div class="">
+      <span class="">Даша</span>
+      <span class=""><%= time %></span>
+    </div>
+    <p class=""><%= text%></p>
+
+    <% if products.present? %>
+      <%= render VetfortExtensionV5::AiConsultant::ProductsGridComponent.new(products: products) %>
+    <% end %>
+  </div>
+</div>

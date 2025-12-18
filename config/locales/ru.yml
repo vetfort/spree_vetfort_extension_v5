@@ -100,6 +100,7 @@ ru:
             approve: "Продать"
     offline_vetfort: "Оффлайн Продажа"
     import_vetfort: "Импорт Товаров"
+    ai_conversation: "История чатов с AI"
   vetfort:
     ai_consultant:
       welcome_component:

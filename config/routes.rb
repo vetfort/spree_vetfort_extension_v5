@@ -53,6 +53,7 @@ Spree::Core::Engine.add_routes do
           end
         end
       end
+      resources :ai_conversations, only: [:index, :show]
     end
   end
 

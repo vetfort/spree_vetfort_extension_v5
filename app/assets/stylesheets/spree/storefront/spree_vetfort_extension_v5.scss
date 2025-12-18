@@ -1,4 +1,4 @@
-@import "spree/storefront/colors";
+@import "spree/colors";
 
 .vetfort {
   &--ai-consultant {
@@ -179,7 +179,7 @@
       gap: 0.5rem;
 
       &-content {
-        background: linear-gradient(80deg, color-indigo(100) 0%, color-pink(50) 100%);
+        background: linear-gradient(80deg, color-indigo(100) 0%, color-pink(50) 100%); 
         border-radius: 0.5rem;
         box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
         transition: box-shadow 0.1s ease;

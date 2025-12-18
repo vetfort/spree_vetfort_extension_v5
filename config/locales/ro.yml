@@ -100,6 +100,7 @@ ro:
             approve: "Vinde"
     offline_vetfort: "Vânzare offline"
     import_vetfort: "Import Produse"
+    ai_conversation: "istoricul conversațiilor cu AI"
   vetfort:
     ai_consultant:
       welcome_component:
