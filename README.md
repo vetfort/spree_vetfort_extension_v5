@@ -97,3 +97,13 @@ Notes:
 - The `test_app` task builds `spec/dummy` via `spree/testing_support` so the engine can be mounted in isolation.
 - `.rspec` is configured to load `spec/spec_helper.rb`, which pulls in `spree_dev_tools/rspec/spec_helper` with FactoryBot, Capybara, and DatabaseCleaner support.
 - The default `rake` task will generate the dummy app automatically if it is missing before executing specs.
+
+## AI-searchable tag population
+
+Use the LLM-backed rake task to generate `ai_searchable:*` tags for existing products:
+
+```
+bundle exec rake ai_searchable:populate
+```
+
+The task calls OpenAI (`gpt-4o-mini`) with product names, descriptions, taxons, and properties, then normalizes the response via `AiSearchable::ProductTagger`. Set `OPENAI_API_KEY` in the environment before running it. Tags are added to `product.tag_list` only when the model returns values that match `config/ai_searchable.yml`.
