@@ -20,7 +20,6 @@ module LLMAssistants
       end
 
       def fetch(user_intent:)
-        # binding.pry
         prompt = products_prompt_template.format(
           user_intent: user_intent,
           ai_dimensions: ai_dimensions_description
