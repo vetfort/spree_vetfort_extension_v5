@@ -48,6 +48,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'telegram-bot-ruby'
   s.add_dependency 'aasm'
   s.add_dependency 'faker'
+  s.add_dependency 'redcarpet'
 
   s.add_development_dependency 'spree_dev_tools'
   s.add_development_dependency 'rspec-rails'

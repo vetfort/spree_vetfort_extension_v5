@@ -6,10 +6,11 @@
       <span class="">Даша</span>
       <span class=""><%= time %></span>
     </div>
-    <p class=""><%= text%></p>
+    <%= markdown(text) %>
 
     <% if products.present? %>
       <%= render VetfortExtensionV5::AiConsultant::ProductsGridComponent.new(products: products) %>
     <% end %>
   </div>
 </div>
+

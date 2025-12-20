@@ -103,6 +103,7 @@ ru:
     ai_conversation: "История чатов с AI"
   vetfort:
     ai_consultant:
+      form_placeholder: "Задайте вопрос..."
       welcome_component:
         title: "Привет, я Даша, <br /> ваш AI консультант"
         suggestions: "Задайте свой вопрос. <br /> Например:"
