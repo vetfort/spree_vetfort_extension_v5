@@ -7,6 +7,20 @@ ai_searchable:
       - rodent
       - other
 
+  product_type:
+    values:
+      - food
+      - supplement
+      - toy
+      - accessory
+      - hygiene
+      - grooming
+      - litter
+      - carrier
+      - bedding
+      - bowl_feeder
+      - other
+
   format:
     values:
       - dry

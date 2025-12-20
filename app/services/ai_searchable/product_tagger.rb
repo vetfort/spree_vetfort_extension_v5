@@ -117,16 +117,26 @@ module AiSearchable
     end
 
     def normalize_ai_tags(ai_tags)
-      ai_tags.each_with_object({}) do |(dimension, values), acc|
+      normalized = ai_tags.each_with_object({}) do |(dimension, values), acc|
         normalized_dimension = normalize_dimension(dimension)
         next unless normalized_dimension
 
         normalized_values = normalized_values_for(normalized_dimension, values)
         next if normalized_values.empty?
 
-        normalized_values = normalized_values.take(1) unless multiple_dimensions.include?(normalized_dimension)
-        acc[normalized_dimension] = normalized_values
+        acc[normalized_dimension] = if multiple_dimensions.include?(normalized_dimension)
+          normalized_values
+        else
+          normalized_values.first
+        end
       end
+
+      product_type = normalized["product_type"]
+      if product_type.present? && !%w[food supplement].include?(product_type)
+        normalized.except!("format", "diet", "problem")
+      end
+
+      normalized
     end
 
     def normalize_dimension(dimension)

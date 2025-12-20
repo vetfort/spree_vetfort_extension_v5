@@ -78,11 +78,24 @@ module LLMAssistants
       end
 
       def build_search_params(ai_tags)
+        product_type = normalize_tag_value(ai_tags["product_type"])
+
+        format = normalize_tag_value(ai_tags["format"])
+        diet = normalize_tag_value(ai_tags["diet"])
+        problems = normalize_list(ai_tags["problem"])
+
+        if product_type.present? && !%w[food supplement].include?(product_type)
+          format = nil
+          diet = nil
+          problems = []
+        end
+
         {
           species: normalize_list(ai_tags["species"]),
-          format: normalize_list(ai_tags["format"]),
-          diet: normalize_list(ai_tags["diet"]),
-          problems: normalize_list(ai_tags["problems"]),
+          product_type: product_type,
+          format: format,
+          diet: diet,
+          problems: problems,
           brand: normalize_brand(ai_tags["brand"]),
           max_price: normalize_price(ai_tags["max_price"])
         }

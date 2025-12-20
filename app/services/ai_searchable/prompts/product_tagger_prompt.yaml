@@ -13,20 +13,35 @@ template: |
   {product_context}
 
   Rules:
+  - Decide the product_type first; it is the coarse product category (food, supplement, toy, accessory, hygiene, grooming, litter, carrier, bedding, bowl_feeder, other).
+  - Only emit format, diet, and problem when product_type is "food" or "supplement". If product_type is anything else, omit format, diet, and problem entirely.
+  - Non-food examples: toys, collars, leashes, bowls, fountains, carriers, litter boxes, grooming tools, scratching posts. For such products, only emit species/brand/product_type when clear.
+  - Use format: treat ONLY for edible treats/snacks. Never apply it to toys or chew toys.
   - Use only the allowed values shown above for enum dimensions; never invent new enum values.
   - Keep values lowercase, ASCII only, and replace spaces with underscores.
   - If a dimension is ambiguous or not mentioned, leave it empty/omit it.
   - For `brand`, only emit a value when the brand is clearly stated or obvious from the product context; otherwise return null.
-  - Prefer high-precision medical/dietary tags when they are explicitly indicated (e.g., veterinary diets or specific problems).
+  - Emit diet/problem only when explicitly indicated; otherwise omit them.
   - Output **JSON** with the key "ai_tags". Do not add commentary.
 
   Expected JSON shape:
   {{
     "ai_tags": {{
-      "species": ["dog"],
+      "product_type": "toy",
+      "species": ["cat"],
+      "brand": "mr_bandit"
+    }}
+  }}
+
+  Or for food/supplements:
+
+  {{
+    "ai_tags": {{
+      "product_type": "food",
+      "species": ["cat"],
       "format": "dry",
       "diet": "veterinary",
-      "problems": ["urinary"],
+      "problem": ["urinary"],
       "brand": "royal_canin"
     }}
   }}

@@ -1,19 +1,21 @@
 class ProductSearch
-  attr_reader :species, :format, :diet, :problems, :brand, :max_price, :limit
+  attr_reader :species, :product_type, :format, :diet, :problems, :brand, :max_price, :limit
 
-  def initialize(species: nil, format: nil, diet: nil, problems: nil, brand: nil, max_price: nil, limit: nil)
-    @species   = Array.wrap(species).compact_blank
-    @format    = format
-    @diet      = diet
-    @problems  = Array.wrap(problems).compact_blank
-    @brand     = brand
-    @max_price = max_price
-    @limit     = limit
+  def initialize(species: nil, product_type: nil, format: nil, diet: nil, problems: nil, brand: nil, max_price: nil, limit: nil)
+    @species      = Array.wrap(species).compact_blank
+    @product_type = product_type
+    @format       = format.presence
+    @diet         = diet.presence
+    @problems     = Array.wrap(problems).compact_blank
+    @brand        = brand
+    @max_price    = max_price
+    @limit        = limit
   end
 
   def call
     base_scope
       .then { |s| filter_species(s) }
+      .then { |s| filter_product_type(s) }
       .then { |s| filter_format(s) }
       .then { |s| filter_diet(s) }
       .then { |s| filter_problems(s) }
@@ -29,6 +31,12 @@ class ProductSearch
     return scope if species.blank?
 
     scope.tagged_with(build_tags("species", species), any: true)
+  end
+
+  def filter_product_type(scope)
+    return scope if product_type.blank?
+
+    scope.tagged_with(AiSearchable::TagFormat.build("product_type", product_type))
   end
 
   def filter_format(scope)

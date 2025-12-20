@@ -3,6 +3,7 @@
 module AiSearchable
   class Config
     CONFIG_PATH = SpreeVetfortExtensionV5::Engine.root.join("config/ai_searchable.yml")
+    MULTIPLE_DIMENSIONS = %w[species problem].freeze
 
     class << self
       def raw
@@ -34,17 +35,12 @@ module AiSearchable
       # }
       def to_llm_schema
         raw.each_with_object({}) do |(dimension, cfg), acc|
+          multiple = MULTIPLE_DIMENSIONS.include?(dimension.to_s)
+
           if cfg["allow_any"]
-            acc[dimension.to_sym] = {
-              type: "string",
-              multiple: false
-            }
+            acc[dimension.to_sym] = { type: "string", multiple: multiple }
           else
-            acc[dimension.to_sym] = {
-              type: "enum",
-              values: Array(cfg["values"]),
-              multiple: true
-            }
+            acc[dimension.to_sym] = { type: "enum", values: Array(cfg["values"]), multiple: multiple }
           end
         end
       end
