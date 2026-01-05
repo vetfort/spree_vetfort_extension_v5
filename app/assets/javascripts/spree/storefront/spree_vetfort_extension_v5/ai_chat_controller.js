@@ -70,7 +70,8 @@ export default class extends Controller {
 
     try {
       await chatApi.sendMessage(message, {
-        signal: this.abortController.signal
+        signal: this.abortController.signal,
+        path: window.location.pathname
       });
 
       return;

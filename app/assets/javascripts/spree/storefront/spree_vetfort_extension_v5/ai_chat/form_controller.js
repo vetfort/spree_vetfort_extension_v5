@@ -9,9 +9,14 @@ export default class extends Controller {
     "input",
     "form",
     "sendButton",
+    "path"
   ];
 
   connect() {
+    if (this.hasPathTarget) {
+      this.pathTarget.value = window.location.pathname + window.location.search;
+    }
+
     const { PubSub } = window.VetfortDeps || {};
     if (!PubSub) { console.warn("PubSub not loaded"); }
     this.pubsub = PubSub;

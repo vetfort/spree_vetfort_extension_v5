@@ -19,7 +19,7 @@ module VetfortExtensionV5
           when 'assistant'
             VetfortExtensionV5::AiConsultant::BotMessageComponent.new(text: message.content, time: message.created_at.strftime('%H:%M'), products: message.products)
           end
-        end
+        end.compact
       end
     end
   end

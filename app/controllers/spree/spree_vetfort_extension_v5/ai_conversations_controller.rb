@@ -14,6 +14,7 @@ module Spree
       def create
         ActiveRecord::Base.transaction do
           @conversation = conversation_finder.new_conversation
+          append_context_message(@conversation)
           @message = ai_consultant_params[:content]
           @conversation.append_message(role: 'user', content: @message)
         end
@@ -65,9 +66,9 @@ module Spree
 
       def ai_consultant_params
         if params[:ai_conversation].present?
-          params.require(:ai_conversation).permit(:content)
+          params.require(:ai_conversation).permit(:content, :path)
         else
-          params.permit(:content)
+          params.permit(:content, :path)
         end
       end
 
@@ -76,6 +77,14 @@ module Spree
         user_identifier = user ? "user:#{user.id}" : "guest:#{guest_uuid}"
         ['ai_consultant', user_identifier, 'ai-messages'].join(':')
       end
+
+      def append_context_message(conversation)
+        context = ContextResolver.new(ai_consultant_params[:path]).call
+        return if context.blank?
+
+        conversation.append_message(role: 'system', content: context)
+      end
+
     end
   end
 end

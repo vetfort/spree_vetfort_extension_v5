@@ -9,7 +9,7 @@
         placeholder: t('vetfort.ai_consultant.form_placeholder'),
         class: "vetfort--ai-consultant__welcome-component-input-textarea",
         data: { "ai-chat--form-target": "input" } %>
-
+    <%= hidden_field_tag :path, nil, data: { "ai-chat--form-target": "path" } %>
     <%= button_tag type: "submit",
       class: "vetfort--ai-consultant__welcome-component-input-button",
       data: { "ai-chat--form-target": "sendButton" } do %>

@@ -78,7 +78,7 @@ class ProductSearch
   end
 
   def base_scope
-    Spree::Product.includes(master: :prices)
+    Spree::Product.active.includes(master: :prices)
   end
 
   def build_tags(dimension, values)

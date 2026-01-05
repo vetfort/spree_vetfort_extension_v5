@@ -1,9 +1,9 @@
 import { post, get } from "@rails/request.js";
 
 export const chatApi = {
-  sendMessage(message, { signal } = {}) {
+  sendMessage(message, { signal, path } = {}) {
     return post("/ai_conversations", {
-      body: JSON.stringify({ content: message }),
+      body: JSON.stringify({ content: message, path }),
       contentType: "application/json",
       responseKind: "turbo-stream",
       fetch: {
@@ -26,7 +26,8 @@ export const chatApi = {
     return post("/ai_conversations/active_conversation", {
       responseKind: "turbo-stream",
       fetch: {
-        headers: { Accept: "text/vnd.turbo-stream.html, text/html, application/json" }
+        headers: { Accept: "text/vnd.turbo-stream.html, text/html, application/json" },
+        body: { path: window.location.pathname }
       }
     });
   }
