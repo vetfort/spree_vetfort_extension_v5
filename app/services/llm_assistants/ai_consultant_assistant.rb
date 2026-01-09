@@ -8,9 +8,11 @@ module LLMAssistants
       new.call(messages: messages, tools: tools)
     end
 
-    def call(messages:, tools: [])
-      tools = Array(tools)
-      tools << LLMAssistants::Tools::ProductsFetch.new(llm: llm) if tools.empty?
+    def call(messages:)
+      tools = [].tap do |tools_list|
+        tools_list << LLMAssistants::Tools::ProductsFetch.new(llm: llm)
+        tools_list << LLMAssistants::Tools::SemanticProductsSearch.new(llm: llm)
+      end
 
       instructions = ai_consultant_prompt_template.template
       assistant = Langchain::Assistant.new(

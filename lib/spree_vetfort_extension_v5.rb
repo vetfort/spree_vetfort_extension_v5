@@ -12,3 +12,7 @@ require 'aasm'
 require 'faker'
 require 'telegram/bot'
 require 'view_component'
+
+# RAG / vector search (pgvector + neighbor)
+require 'pgvector'
+require 'neighbor'

@@ -50,6 +50,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'faker'
   s.add_dependency 'redcarpet'
 
+  # RAG / vector search (Postgres)
+  s.add_dependency 'pgvector'
+  s.add_dependency 'neighbor'
+
   s.add_development_dependency 'spree_dev_tools'
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'capybara'
