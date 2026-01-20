@@ -1,5 +1,55 @@
 @import "spree/colors";
 
+@mixin vetfort-ai-consultant-dialog {
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+  z-index: 60;
+}
+
+@mixin vetfort-ai-consultant-dialog-content {
+  background: linear-gradient(80deg, color-indigo(100) 0%, color-pink(50) 100%); 
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.1s ease;
+  height: 80vh;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem;
+  gap: 1rem;
+
+  &:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  }
+}
+
+@mixin vetfort-ai-consultant-products-card {
+  min-width: 12rem;
+  max-width: 12rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: color-purple(300);
+  border-radius: 0.5rem;
+  box-shadow:
+    0 1px 2px 0 color-gray(800, .06),
+    0 1px 3px 0 color-gray(800, .10);
+  transition: box-shadow 0.1s ease;
+  padding: 0.5rem;
+
+  &:hover {
+    box-shadow:
+      0 4px 6px -1px color-gray(800, .10),
+      0 2px 4px -1px color-gray(800, .10);
+  }
+}
+
 .vetfort {
   &--ai-consultant {
     width: 28rem;
@@ -22,7 +72,7 @@
       transition: box-shadow 0.1s ease;
 
       &-bg {
-        background-image: url('https://res.cloudinary.com/domsefhf3/image/upload/v1761070930/toast-profile-bg_n7imyi.png');
+        background-image: url('https://vetfort-shop-v5.t3.storage.dev/system/Toast%20Profile%20Background.png');
         padding: 1rem;
         background-repeat: no-repeat;
         background-size: 10rem;
@@ -172,29 +222,10 @@
     }
 
     &__dialog {
-      width: 100%;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 1rem;
-      gap: 0.5rem;
+      @include vetfort-ai-consultant-dialog;
 
       &-content {
-        background: linear-gradient(80deg, color-indigo(100) 0%, color-pink(50) 100%); 
-        border-radius: 0.5rem;
-        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-        transition: box-shadow 0.1s ease;
-        height: 80vh;
-        min-height: 0;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 1rem;
-        gap: 1rem;
-
-        &:hover {
-          box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
-        }
+        @include vetfort-ai-consultant-dialog-content;
       }
     }
 
@@ -234,19 +265,7 @@
     }
 
     &__products-card {
-      min-width: 12rem;
-      max-width: 12rem;
-
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      background: color-purple(300);
-      border-radius: 0.5rem;
-      box-shadow:
-        0 1px 2px 0 color-gray(800, .06),
-        0 1px 3px 0 color-gray(800, .10);
-      transition: box-shadow 0.1s ease;
-      padding: 0.5rem;
+      @include vetfort-ai-consultant-products-card;
 
       &-image {
         width: 100%;
@@ -286,6 +305,83 @@
 
     &__products-empty {
       display: none;
+    }
+  }
+}
+
+.mob-vetfort {
+  &--ai-consultant {
+    width: 28rem;
+  
+    &__dialog {
+      @include vetfort-ai-consultant-dialog;
+      
+      width: 100vw;
+      margin-bottom: 0;
+
+
+      &-content {
+        @include vetfort-ai-consultant-dialog-content;
+
+        border-radius: 0;
+        padding: 0.5rem 0 0.5rem 0;
+      }
+
+      &-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 50;
+      }
+
+      &-action-bar {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        height: 2rem;
+      }
+    }
+
+    &__products-card {
+      @include vetfort-ai-consultant-products-card;
+
+      &-image {
+        width: 100%;
+        max-height: 10rem;
+
+        img {
+          border-radius: 0.5rem;
+          object-fit: fit;
+        }
+      }
+
+      &-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      &-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: color-gray(700);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.4;
+      }
+
+      &-price {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: color-gray(600); 
+      }
+      
     }
   }
 }

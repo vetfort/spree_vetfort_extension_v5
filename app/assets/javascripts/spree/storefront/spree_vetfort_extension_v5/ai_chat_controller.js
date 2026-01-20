@@ -6,6 +6,7 @@ import { ChatStateManager } from "./services/chat_state_manager";
 export default class extends Controller {
   static targets = [
     "dialog",
+    "dialogBackdrop",
     "heroWindow",
     "openChatButton",
   ];
@@ -86,5 +87,17 @@ export default class extends Controller {
 
   toggleDialog() {
     this.dialogTarget.classList.toggle("hidden");
+  }
+
+  toggleMobileDialog() {
+    this.dialogTarget.classList.remove("hidden");
+    this.dialogBackdropTarget.classList.remove("hidden");
+    this.openChatButtonTarget.classList.add("hidden");
+  }
+
+  closeMobileDialog() {
+    this.dialogTarget.classList.add("hidden");
+    this.dialogBackdropTarget.classList.add("hidden");
+    this.openChatButtonTarget.classList.remove("hidden");
   }
 }

@@ -41,7 +41,7 @@
           <br />
           <%= Time.current.year %>
         </mj-text>
-        <mj-image src="https://res.cloudinary.com/domsefhf3/image/upload/v1733502258/Untitled_toxsa5.png" width="600px" alt="" padding="0" href="https://google.com" />
+        <mj-image src="https://vetfort-shop-v5.t3.storage.dev/system/email_hero.png" width="600px" alt="" padding="0" href="https://google.com" />
       </mj-column>
     </mj-section>
 

@@ -29,18 +29,13 @@ module Spree
       end
 
       def active_conversation
+        set_variant
         @conversation = conversation_finder.last_active_or_new_conversation
+        @messages_target_id = messages_target_id
 
-        render turbo_stream: [
-          turbo_stream.replace('messages-history') do
-            render_to_string(
-              ::VetfortExtensionV5::AiConsultant::MessagesHistoryComponent.new(
-                messages_target_id: messages_target_id,
-                conversation: @conversation
-              )
-            )
-          end
-        ]
+        respond_to do |format|
+          format.turbo_stream
+        end
       end
 
       private

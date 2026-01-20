@@ -1,0 +1,9 @@
+<% component = ::VetfortExtensionV5::AiConsultant::MessagesHistoryComponent.new(
+  messages_target_id: @messages_target_id,
+  conversation: @conversation
+) %>
+
+<%= turbo_stream.replace("messages-history") do %>
+  <%# self.formats = [:html] %>
+  <%= render component %>
+<% end %>

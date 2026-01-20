@@ -11,7 +11,7 @@ module LLMAssistants
     def call(messages:)
       tools = [].tap do |tools_list|
         tools_list << LLMAssistants::Tools::ProductsFetch.new(llm: llm)
-        tools_list << LLMAssistants::Tools::SemanticProductsSearch.new(llm: llm)
+        tools_list << LLMAssistants::Tools::SemanticProductsSearch.new
       end
 
       instructions = ai_consultant_prompt_template.template

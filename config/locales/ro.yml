@@ -104,6 +104,8 @@ ro:
   vetfort:
     ai_consultant:
       form_placeholder: "Puneți o întrebare..."
+      client: "Tu"
+      dasha: "Dașa"
       welcome_component:
         title: "Buna, sunt Dașa, <br /> AI consultantul vostru personal"
         suggestions: "Puneți o întrebare. <br /> De exemplu:"

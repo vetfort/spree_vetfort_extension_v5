@@ -104,6 +104,8 @@ ru:
   vetfort:
     ai_consultant:
       form_placeholder: "Задайте вопрос..."
+      client: 'Вы'
+      dasha: 'Даша'
       welcome_component:
         title: "Привет, я Даша, <br /> ваш AI консультант"
         suggestions: "Задайте свой вопрос. <br /> Например:"

@@ -2,7 +2,9 @@
   <img class="w-10 h-10 rounded-full" src="<%= SpreeVetfortExtensionV5::Images.bot_avatar %>" alt="Jese image">
   <div class="flex flex-col w-full max-w-[80%] leading-1.5 p-4 border-gray-200 bg-purple-200 rounded-e-xl rounded-es-xl dark:bg-purple-200">
     <div class="flex items-center space-x-2 rtl:space-x-reverse">
-      <span class="text-sm font-semibold text-gray-900 dark:text-white">Даша</span>
+      <span class="text-sm font-semibold text-gray-900 dark:text-white">
+        <%= t('vetfort.ai_consultant.dasha') %>
+      </span>
       <span class="text-sm font-normal text-gray-500 dark:text-gray-400"><%= time %></span>
     </div>
     <%= markdown(text) %>
