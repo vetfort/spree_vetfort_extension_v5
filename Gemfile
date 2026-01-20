@@ -19,3 +19,7 @@ gem 'pg' if ENV['DB'] == 'postgres' || ENV['CI']
 gem 'sqlite3', '>= 2.0'
 
 gemspec
+
+# gem "sprockets-rails", "~> 3.5"
+
+gem "sprockets-rails", "~> 3.5"

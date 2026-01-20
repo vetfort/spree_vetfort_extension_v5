@@ -1,0 +1,92 @@
+ai_searchable:
+  species:
+    values:
+      - dog
+      - cat
+      - parrot
+      - rodent
+      - other
+
+  product_type:
+    values:
+      - food
+      - supplement
+      - toy
+      - accessory
+      - hygiene
+      - grooming
+      - litter
+      - carrier
+      - bedding
+      - bowl_feeder
+      - other
+
+  format:
+    values:
+      - dry
+      - wet
+      - treat
+      - supplement
+
+  diet:
+    values:
+      - normal
+      - premium
+      - super_premium
+      - veterinary
+
+  problem:
+    values:
+      - skin
+      - renal
+      - gi
+      - urinary
+      - joints
+      - allergy
+      - weight
+      - liver
+      - immune
+      - behavior
+      - cancer
+      - hairball
+      - diarrhea
+
+  brand:
+    values:
+      - vetexpert
+      - dolfos
+      - brit
+      - royal_canin
+      - stangest
+      - vetnova
+      - ceva_animal_health
+      - mango
+      - astor
+      - catalysis_s_l
+      - synergylabs
+      - piper
+      - mr_bandit
+    aliases:
+      vet_expert:
+        - vet_expert
+        - vet-expert
+        - ветэксперт
+        - вет_эксперт
+        - вет-эксперт
+        - vetekspert
+      royal_canin:
+        - royalcanin
+        - royal_canin
+        - royal-canin
+      piper:
+        - piper_animals
+        - piper-animals
+        - piper_adult 
+        - piper-adult
+        - piperadult
+      ceva_animal_health:
+        - ceva
+        - ceva_animal_health
+      catalysis_s_l:
+        - catalysis
+        - catalysis_sl

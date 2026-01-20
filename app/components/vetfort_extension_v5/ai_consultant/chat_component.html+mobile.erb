@@ -1,0 +1,17 @@
+<div
+  class="fixed right-0 bottom-0 group
+    flex flex-col items-end z-[100]
+    mob-vetfort--ai-consultant"
+  data-controller="ai-chat"
+>
+  <%= render VetfortExtensionV5::AiConsultant::ChatDialogComponent.new(
+    turbo_stream_identifier:,
+    messages_target_id:,
+  ) %>
+  <div data-ai-chat-target="heroWindow" class="hidden">
+    <%= render VetfortExtensionV5::AiConsultant::HeroComponent.new %>
+  </div>
+  <div data-ai-chat-target="openChatButton" class="hidden">
+    <%= render 'spree/ai_consultant/bot_button' %>
+  </div>
+</div>

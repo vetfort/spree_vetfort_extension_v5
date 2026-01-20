@@ -1,0 +1,43 @@
+
+<div
+    class="mob-vetfort--ai-consultant__dialog hidden"
+    data-ai-chat-target="dialog"
+  >
+  <%= turbo_frame_tag "vetfort-ai-chat",
+    class: "w-[28rem] md:w-[40rem]",
+    data: {
+      action: "turbo:frame-load->ai-chat#scrollToBottom"
+    } do %>
+
+    <%= turbo_stream_from turbo_stream_identifier %>
+    <div class="mob-vetfort--ai-consultant__dialog-content">
+      <div class="mob-vetfort--ai-consultant__dialog-action-bar">
+        <button 
+          type="button" 
+          class="inline-flex items-center justify-center  text-fg-brand bg-neutral-primary hover:bg-brand hover:text-white focus:ring-4 focus:ring-brand-subtle rounded-base focus:outline-none"
+          data-action="click->ai-chat#closeMobileDialog"
+        >
+          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        data-controller="ai-chat--message-history"
+        data-ai-chat--message-history-target="placeholder"
+        id='messages-history'>
+      </div>
+
+      <!-- Templates for client-side message rendering using the same partials -->
+      <template id="ai-chat-message-user">
+        <%= render VetfortExtensionV5::AiConsultant::CustomerMessageComponent.new(text: '', time: '') %>
+      </template>
+    </div>
+  <% end %>
+</div>
+<div 
+  class='mob-vetfort--ai-consultant__dialog-backdrop hidden' 
+  data-action="click->ai-chat#closeMobileDialog"
+  data-ai-chat-target="dialogBackdrop"
+></div>

@@ -1,0 +1,25 @@
+<div
+    class="vetfort--ai-consultant__dialog hidden"
+    data-ai-chat-target="dialog"
+  >
+  <%= turbo_frame_tag "vetfort-ai-chat",
+    class: "w-[28rem] md:w-[40rem]",
+    data: {
+      action: "turbo:frame-load->ai-chat#scrollToBottom"
+    } do %>
+
+    <%= turbo_stream_from turbo_stream_identifier %>
+    <div class="vetfort--ai-consultant__dialog-content">
+      <div
+        data-controller="ai-chat--message-history"
+        data-ai-chat--message-history-target="placeholder"
+        id='messages-history'>
+      </div>
+
+      <!-- Templates for client-side message rendering using the same partials -->
+      <template id="ai-chat-message-user">
+        <%= render VetfortExtensionV5::AiConsultant::CustomerMessageComponent.new(text: '', time: '') %>
+      </template>
+    </div>
+  <% end %>
+</div>

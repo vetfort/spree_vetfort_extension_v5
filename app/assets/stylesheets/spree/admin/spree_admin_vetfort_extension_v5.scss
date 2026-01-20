@@ -1,0 +1,144 @@
+@import "spree/colors";
+
+.vetfort {
+  &--ai-consultant {
+    &__admin-conversation {
+      display: flex;
+      flex-direction: column;
+
+      background: linear-gradient(-45deg, color-indigo(200) 0%, color-pink(100) 100%);
+      padding: 16px;
+      margin-bottom: 16px;
+
+      gap: 1rem;
+
+      &-customer-message {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid color-gray(400);
+        background: color-blue-light(100);
+
+        &--content {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          align-items: flex-end;
+        }
+      }
+
+      &-bot-message {
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid color-gray(400);
+        background: color-purple(100);
+
+        &--content {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-start;
+
+          .vetfort--ai-consultant__products-grid {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.5rem 0;
+            scroll-behavior: smooth;
+
+            // Hide scrollbar but keep functionality
+            scrollbar-width: thin;
+            scrollbar-color: color-gray(300) transparent;
+
+            &::-webkit-scrollbar {
+              height: 6px;
+            }
+
+            &::-webkit-scrollbar-track {
+              background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+              background: color-gray(300);
+              border-radius: 3px;
+
+              &:hover {
+                background: color-gray(400);
+              }
+            }
+
+            // Prevent cards from shrinking
+            > * {
+              flex-shrink: 0;
+            }
+          }
+
+          .vetfort--ai-consultant__products-card {
+            min-width: 12rem;
+            max-width: 12rem;
+
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: color-purple(300);
+            border-radius: 0.5rem;
+            box-shadow:
+              0 1px 2px 0 color-gray(800, .06),
+              0 1px 3px 0 color-gray(800, .10);
+            transition: box-shadow 0.1s ease;
+            padding: 0.5rem;
+
+            &-image {
+              img {
+                border-radius: 0.5rem;
+                object-fit: fit;
+
+                max-width: 11rem;
+                max-height: 11rem;
+              }
+            }
+
+            &-details {
+              display: flex;
+              flex-direction: column;
+              gap: 0.25rem;
+            }
+
+            &-title {
+              font-size: 1rem;
+              font-weight: 600;
+              color: color-gray(700);
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              line-height: 1.4;
+            }
+
+            &-price {
+              font-size: 0.9rem;
+              font-weight: 500;
+              color: color-gray(600); 
+            }
+            
+          }
+        }
+
+        &--avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}

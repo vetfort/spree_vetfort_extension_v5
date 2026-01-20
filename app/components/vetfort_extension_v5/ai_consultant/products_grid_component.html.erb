@@ -1,0 +1,12 @@
+<% if @products.present? %>
+  <div class="vetfort--ai-consultant__products-grid">
+    <% @products.each do |entry| %>
+      <% card = product_entry_to_card_component(entry) %>
+      <% if card %>
+        <%= render card %>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="ai-products-empty"></div>
+<% end %>

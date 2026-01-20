@@ -4,6 +4,13 @@ module SpreeVetfortExtensionV5
     isolate_namespace Spree
     engine_name 'spree_vetfort_extension_v5'
 
+    initializer 'spree_vetfort_extension_v5.assets.precompile' do |app|
+      app.config.assets.precompile += %w[
+        spree/storefront/spree_vetfort_extension_v5.css
+        spree/admin/spree_admin_vetfort_extension_v5.css
+      ]
+    end
+
     # use rspec for tests
     config.generators do |g|
       g.test_framework :rspec
@@ -34,8 +41,17 @@ module SpreeVetfortExtensionV5
       Rails.application.config.spree_admin.head_partials << "spree/admin/shared/vetfort_extension_v5_head"
       Rails.application.config.spree_admin.store_products_nav_partials <<
         'spree/admin/shared/sidebar/vetfort_import_nav_item'
+      Rails.application.config.spree_admin.store_nav_partials << "spree/admin/shared/sidebar/ai_conversations_nav_item"
+
+      Rails.application.config.spree_storefront.head_partials << "spree/shared/vetfort_extension_v5_storefront_head"
+      Rails.application.config.spree_storefront.body_end_partials << 'spree/shared/vetfort_ai_consultant'
     end
 
+    console do
+      require 'vetfort/console'
+
+      Object.include Vetfort::Console
+    end
     # initializer 'spree_vetfort_extension_v5.helpers' do |app|
     #   ActiveSupport.on_load(:action_controller) do
     #     app.helpers.include SpreeVetfortExtensionV5::ProductImportsHelper

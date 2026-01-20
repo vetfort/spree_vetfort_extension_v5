@@ -1,0 +1,224 @@
+$brand: (
+  50:  #f3fbf9,
+  100: #d6f4ee,
+  200: #ade9dd,
+  300: #7cd7c6,
+  400: #34bfa6,
+  500: #0ea889,
+  600: #0a8a71,
+  700: #0a6e5c,
+  800: #094d42,
+  900: #073a33
+);
+
+@function color-brand($variant: 500, $alpha: 1) {
+  @return change-color(map-get($brand, $variant), $alpha: $alpha);
+}
+
+$pink: (
+  25:  #fff7f5,
+  50:  #fff0ec,
+  100: #ffdeda,
+  200: #ffc4bb,
+  300: #ffa08e,
+  400: #ff7a64,
+  500: #ff5a3d,
+  600: #e0462c,
+  700: #b83721,
+  800: #922c1b,
+  900: #762416
+);
+
+@function color-pink($variant: 500, $alpha: 1) {
+  @return change-color(map-get($pink, $variant), $alpha: $alpha);
+}
+
+$gray: (
+  50:  #fafafb,
+  100: #f3f5f7,
+  200: #e6eaf0,
+  300: #ced5df,
+  400: #9aa6b5,
+  500: #6b7685,
+  600: #525d6b,
+  700: #3d4753,
+  800: #232a33,
+  900: #141a21,
+  950: #0d1116
+);
+
+@function color-gray($variant: 500, $alpha: 1) {
+  @return change-color(map-get($gray, $variant), $alpha: $alpha);
+}
+
+$gray-light-colors: (
+  200: #e6eaf0,
+  500: #6b7685
+);
+
+@function color-gray-light($variant: 500, $alpha: 1) {
+  @return change-color(map-get($gray-light-colors, $variant), $alpha: $alpha);
+}
+
+$gray-blue: (
+  50:  #f6f8fb,
+  200: #d6deea,
+  400: #6d7ea0,
+  500: #4f5f85,
+  700: #38425c
+);
+
+@function color-gray-blue($variant: 500, $alpha: 1) {
+  @return change-color(map-get($gray-blue, $variant), $alpha: $alpha);
+}
+
+$blue: (
+  50:  #e9fbff,
+  100: #c9f3ff,
+  200: #a1e9ff,
+  300: #6fdcff,
+  400: #37cdff,
+  500: #10bff3,
+  700: #0a86be
+);
+
+@function color-blue($variant: 500, $alpha: 1) {
+  @return change-color(map-get($blue, $variant), $alpha: $alpha);
+}
+
+$blue-light: (
+  50:  #edf9ff,
+  100: #daf3fe,
+  200: #b7e7fe,
+  300: #80d5fe,
+  500: #19b1f0,
+  700: #0a77a8
+);
+
+@function color-blue-light($variant: 500, $alpha: 1) {
+  @return change-color(map-get($blue-light, $variant), $alpha: $alpha);
+}
+
+$blue-dark: (
+  25:  #f3f6ff,
+  200: #b8c8ff,
+  500: #3666ff,
+  700: #0f3fe6
+);
+
+@function color-blue-dark($variant: 500, $alpha: 1) {
+  @return change-color(map-get($blue-dark, $variant), $alpha: $alpha);
+}
+
+$green-light: (
+  50:  #f0fee9,
+  100: #dafcd0,
+  200: #baf7a8,
+  300: #7fe78a,
+  500: #42c955,
+  700: #2a7d3a
+);
+
+@function color-green-light($variant: 500, $alpha: 1) {
+  @return change-color(map-get($green-light, $variant), $alpha: $alpha);
+}
+
+$orange: (
+  50:  #fff7ee,
+  100: #ffead6,
+  200: #ffd5ad,
+  300: #ffb574,
+  500: #ff7a1a,
+  700: #c94611
+);
+
+@function color-orange($variant: 500, $alpha: 1) {
+  @return change-color(map-get($orange, $variant), $alpha: $alpha);
+}
+
+$orange-dark: (
+  50:  #fff3ea,
+  100: #ffe0c7,
+  200: #ffc493,
+  500: #ff5a1f,
+  700: #c12c0e
+);
+
+@function color-orange-dark($variant: 500, $alpha: 1) {
+  @return change-color(map-get($orange-dark, $variant), $alpha: $alpha);
+}
+
+$indigo: (
+  50:  #f2efff,
+  100: #e6e2ff,
+  200: #cfc8ff,
+  300: #b0a5ff,
+  500: #6f6df4,
+  600: #5f55e0,
+  700: #3f3bcd
+);
+
+@function color-indigo($variant: 500, $alpha: 1) {
+  @return change-color(map-get($indigo, $variant), $alpha: $alpha);
+}
+
+$purple: (
+  25:  #fbf7ff,
+  50:  #f5efff,
+  100: #ece3ff,
+  200: #d7caff,
+  300: #b9a7ff,
+  400: #9a83ff,
+  500: #7b5dff,
+  600: #6a46f2,
+  700: #5936df,
+  800: #4629bd,
+  900: #3a229b
+);
+
+@function color-purple($variant: 500, $alpha: 1) {
+  @return change-color(map-get($purple, $variant), $alpha: $alpha);
+}
+
+$success: (
+  50:  #edfdf3,
+  100: #d5f8e3,
+  200: #a6f0c2,
+  300: #6fe29f,
+  500: #17b85f,
+  600: #0e9a50,
+  700: #0b7a41
+);
+
+@function color-success($variant: 500, $alpha: 1) {
+  @return change-color(map-get($success, $variant), $alpha: $alpha);
+}
+
+$warning: (
+  50:  #fff9e9,
+  200: #ffe08c,
+  500: #f79c0a,
+  600: #dc6e04,
+  700: #b65207
+);
+
+@function color-warning($variant: 500, $alpha: 1) {
+  @return change-color(map-get($warning, $variant), $alpha: $alpha);
+}
+
+$error: (
+  50:  #fff1f1,
+  100: #ffe0df,
+  200: #ffc7c4,
+  300: #ff9e98,
+  400: #ff746a,
+  500: #f14b3c,
+  600: #d92e23,
+  700: #b7231c,
+  800: #921c17,
+  900: #781914
+);
+
+@function color-error($variant: 500, $alpha: 1) {
+  @return change-color(map-get($error, $variant), $alpha: $alpha);
+}

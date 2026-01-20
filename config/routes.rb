@@ -1,6 +1,13 @@
 Spree::Core::Engine.add_routes do
   resources :links, only: [:index], controller: 'spree_vetfort_extension_v5/links'
 
+  # AI Consultant endpoints
+  resources :ai_conversations, only: [:create, :index], controller: 'spree_vetfort_extension_v5/ai_conversations', path: 'ai_conversations' do
+    post :active_conversation, on: :collection
+
+    resources :ai_messages, only: [:create], controller: 'spree_vetfort_extension_v5/ai_messages'
+  end
+
   namespace :api do
     namespace :v2 do
       namespace :payments do
@@ -46,6 +53,7 @@ Spree::Core::Engine.add_routes do
           end
         end
       end
+      resources :ai_conversations, only: [:index, :show]
     end
   end
 
