@@ -1,17 +1,22 @@
 <%= stylesheet_link_tag 'spree/storefront/spree_vetfort_extension_v5', media: 'all' %>
+
 <script type="module">
-  import PubSub from "https://esm.sh/pubsub-js@1.9.4";
+  import PubSub from "https://esm.sh/pubsub-js@1.9.4"
+  window.VetfortDeps ||= {}
+  window.VetfortDeps.PubSub = PubSub
 
-  window.VetfortDeps ||= {};
-  window.VetfortDeps.PubSub = PubSub;
+  import AiChatController from "<%= asset_path 'spree/storefront/spree_vetfort_extension_v5/ai_chat_controller.js' %>"
+  import AiChatHeroController from "<%= asset_path 'spree/storefront/spree_vetfort_extension_v5/ai_chat/hero_controller.js' %>"
+  import MessageHistory from "<%= asset_path 'spree/storefront/spree_vetfort_extension_v5/ai_chat/message_history_controller.js' %>"
+  import FormController from "<%= asset_path 'spree/storefront/spree_vetfort_extension_v5/ai_chat/form_controller.js' %>"
 
-  import AiChatController from "/assets/spree/storefront/spree_vetfort_extension_v5/ai_chat_controller.js";
-  import AiChatHeroController from "/assets/spree/storefront/spree_vetfort_extension_v5/ai_chat/hero_controller.js";
-  import AiChatMessageHistoryController from "/assets/spree/storefront/spree_vetfort_extension_v5/ai_chat/message_history_controller.js";
-  import AiChatFormController from "/assets/spree/storefront/spree_vetfort_extension_v5/ai_chat/form_controller.js";
-
-  window.Stimulus.register("ai-chat", AiChatController);
-  window.Stimulus.register("ai-chat--hero", AiChatHeroController);
-  window.Stimulus.register("ai-chat--message-history", AiChatMessageHistoryController);
-  window.Stimulus.register("ai-chat--form", AiChatFormController);
+  document.addEventListener('turbo:load', () => {
+    const app = window.Stimulus || null
+    if (app) {
+      app.register('ai-chat', AiChatController)
+      app.register('ai-chat--hero', AiChatHeroController)
+      app.register('ai-chat--message-history', MessageHistory)
+      app.register('ai-chat--form', FormController)
+    }
+  })
 </script>

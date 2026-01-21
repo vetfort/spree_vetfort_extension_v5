@@ -8,6 +8,14 @@ module SpreeVetfortExtensionV5
       app.config.assets.precompile += %w[
         spree/storefront/spree_vetfort_extension_v5.css
         spree/admin/spree_admin_vetfort_extension_v5.css
+        spree/storefront/spree_vetfort_extension_v5/ai_chat_controller.js
+        spree/storefront/spree_vetfort_extension_v5/ai_chat/hero_controller.js
+        spree/storefront/spree_vetfort_extension_v5/ai_chat/message_history_controller.js
+        spree/storefront/spree_vetfort_extension_v5/ai_chat/form_controller.js
+        spree/storefront/spree_vetfort_extension_v5/constants.js
+        spree/storefront/spree_vetfort_extension_v5/services/api.js
+        spree/storefront/spree_vetfort_extension_v5/services/chat_state_manager.js
+        spree/storefront/spree_vetfort_extension_v5/services/scroll_manager.js
       ]
     end
 
