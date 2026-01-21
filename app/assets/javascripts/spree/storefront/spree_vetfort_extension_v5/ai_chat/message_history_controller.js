@@ -2,10 +2,6 @@
 
 import { Controller } from "@hotwired/stimulus";
 
-import { ScrollManager } from "../services/scroll_manager.js";
-import { TOPICS } from "../constants.js";
-import { chatApi } from "../services/api.js";
-
 export default class extends Controller {
   static targets = [
     "placeholder",
@@ -18,6 +14,7 @@ export default class extends Controller {
 
   connect() {
     const hasTargets = this.hasScrollTarget && this.hasMessagesTarget;
+    const { ScrollManager } = window.VetfortDeps.ScrollManager || {};
 
     if (hasTargets) {
       this.scrollManager = new ScrollManager({
@@ -33,6 +30,7 @@ export default class extends Controller {
     const { PubSub } = window.VetfortDeps || {};
     if (!PubSub) { console.warn("PubSub not loaded"); }
     this.pubsub = PubSub;
+    const { TOPICS } = window.VetfortDeps.Constants || {};
 
     if (this.pubsub) {
       this.messageAppendSubscription = this.pubsub.subscribe(TOPICS.MESSAGE_APPEND, (_, data) => this.appendUserMessage(data.text));
@@ -71,6 +69,8 @@ export default class extends Controller {
   }
 
   getCurrentConversation() {
+    const { chatApi } = window.VetfortDeps.Api || {};
+
     chatApi.getActiveConversation().then(response => {
       if (!response) return;
       if (response.ok) {

@@ -10,6 +10,16 @@
   import MessageHistory from "<%= asset_path 'spree/storefront/spree_vetfort_extension_v5/ai_chat/message_history_controller.js' %>"
   import FormController from "<%= asset_path 'spree/storefront/spree_vetfort_extension_v5/ai_chat/form_controller.js' %>"
 
+  import * as VetfortConstants from "<%= asset_path 'spree/storefront/spree_vetfort_extension_v5/constants.js' %>"
+  import * as VetfortApi from "<%= asset_path 'spree/storefront/spree_vetfort_extension_v5/services/api.js' %>"
+  import * as ChatStateManager from "<%= asset_path 'spree/storefront/spree_vetfort_extension_v5/services/chat_state_manager.js' %>"
+  import * as ScrollManager from "<%= asset_path 'spree/storefront/spree_vetfort_extension_v5/services/scroll_manager.js' %>"
+
+  window.VetfortDeps.Constants = VetfortConstants
+  window.VetfortDeps.Api = VetfortApi
+  window.VetfortDeps.ChatStateManager = ChatStateManager
+  window.VetfortDeps.ScrollManager = ScrollManager
+
   document.addEventListener('turbo:load', () => {
     const app = window.Stimulus || null
     if (app) {

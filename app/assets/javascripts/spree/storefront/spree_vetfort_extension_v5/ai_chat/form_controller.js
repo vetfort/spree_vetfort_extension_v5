@@ -2,8 +2,6 @@
 
 import { Controller } from "@hotwired/stimulus";
 
-import { TOPICS } from "../constants.js";
-
 export default class extends Controller {
   static targets = [
     "input",
@@ -40,6 +38,8 @@ export default class extends Controller {
   }
 
   submit(event) {
+    const { TOPICS } = window.VetfortDeps.Constants || {};
+    
     const text = this.inputTarget.value.trim();
     if (!text) {
       event.preventDefault();
