@@ -2,9 +2,9 @@
 
 import { Controller } from "@hotwired/stimulus";
 
-import { ScrollManager } from "../services/scroll_manager";
-import { TOPICS } from "../constants";
-import { chatApi } from "../services/api";
+import { ScrollManager } from "../services/scroll_manager.js";
+import { TOPICS } from "../constants.js";
+import { chatApi } from "../services/api.js";
 
 export default class extends Controller {
   static targets = [

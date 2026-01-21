@@ -1,8 +1,8 @@
 // ai-chat--hero
 import { Controller } from "@hotwired/stimulus";
 
-import { TOPICS } from "../constants";
-import { ChatStateManager } from "../services/chat_state_manager";
+import { TOPICS } from "../constants.js";
+import { ChatStateManager } from "../services/chat_state_manager.js";
 
 export default class extends Controller {
   connect() {

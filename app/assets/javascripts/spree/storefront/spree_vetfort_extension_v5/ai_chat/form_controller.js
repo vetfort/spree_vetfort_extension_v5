@@ -2,7 +2,7 @@
 
 import { Controller } from "@hotwired/stimulus";
 
-import { TOPICS } from "../constants";
+import { TOPICS } from "../constants.js";
 
 export default class extends Controller {
   static targets = [
