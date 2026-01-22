@@ -1,6 +1,6 @@
-import { STORAGE_KEYS } from "../constants";
+const { STORAGE_KEYS } = window.VetfortDeps.Constants || {};
 
-export class ChatStateManager {
+class ChatStateManager {
   shouldShowHero() {
     if (this.isClosedForSession()) return false;
     if (this.isDismissedPermanently()) return false;
@@ -32,3 +32,5 @@ export class ChatStateManager {
     localStorage.removeItem(STORAGE_KEYS.DONT_SHOW_AGAIN);
   }
 }
+
+export { ChatStateManager };

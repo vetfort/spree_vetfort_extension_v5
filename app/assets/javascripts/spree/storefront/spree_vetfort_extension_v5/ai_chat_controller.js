@@ -1,8 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
 
-import { TOPICS } from "./constants";
-import { chatApi } from "./services/api";
-import { ChatStateManager } from "./services/chat_state_manager";
 export default class extends Controller {
   static targets = [
     "dialog",
@@ -12,9 +9,15 @@ export default class extends Controller {
   ];
 
   connect() {
+    const { TOPICS } = window.VetfortDeps.Constants || {};
+    const { ChatStateManager } = window.VetfortDeps.ChatStateManager || {};
+    const { chatApi } = window.VetfortDeps.ChatApi || {};
+
     this.stateManager = new ChatStateManager();
     this.openInitialComponent();
     this.subscribeToPubSub();
+    this.TOPICS = TOPICS;
+    this.chatApi = chatApi;
   }
 
   subscribeToPubSub() {
@@ -22,9 +25,9 @@ export default class extends Controller {
     if (!PubSub) { console.warn("PubSub not loaded"); }
     this.pubsub = PubSub;
 
-    this.closeHeroCtaSubscription = this.pubsub.subscribe(TOPICS.CLOSE_HERO_CTA, () => this.closeHeroCta());
-    this.suggestionsClickSubscription = this.pubsub.subscribe(TOPICS.SUGGESTIONS_CLICK, (_, data) => this.suggestionsClick(data));
-    this.heroInputClickSubscription = this.pubsub.subscribe(TOPICS.HERO_INPUT_CLICK, () => this.heroInputClick());
+    this.closeHeroCtaSubscription = this.pubsub.subscribe(this.TOPICS.CLOSE_HERO_CTA, () => this.closeHeroCta());
+    this.suggestionsClickSubscription = this.pubsub.subscribe(this.TOPICS.SUGGESTIONS_CLICK, (_, data) => this.suggestionsClick(data));
+    this.heroInputClickSubscription = this.pubsub.subscribe(this.TOPICS.HERO_INPUT_CLICK, () => this.heroInputClick());
   }
 
   unsubscribeFromPubSub() {
@@ -39,7 +42,7 @@ export default class extends Controller {
 
   suggestionsClick(data) {
     this.toggleDialog();
-    this.pubsub.publish(TOPICS.MESSAGE_APPEND, { text: data });
+    this.pubsub.publish(this.TOPICS.MESSAGE_APPEND, { text: data });
     this.beginRequest(data);
     this.closeHeroCta();
   }
@@ -67,10 +70,10 @@ export default class extends Controller {
     if (this.abortController) this.abortController.abort();
     this.abortController = new AbortController();
 
-    this.pubsub.publish(TOPICS.BEGIN_REQUEST);
+    this.pubsub.publish(this.TOPICS.BEGIN_REQUEST);
 
     try {
-      await chatApi.sendMessage(message, {
+      await this.chatApi.sendMessage(message, {
         signal: this.abortController.signal,
         path: window.location.pathname
       });

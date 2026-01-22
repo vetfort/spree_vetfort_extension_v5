@@ -1,4 +1,4 @@
-export class ScrollManager {
+class ScrollManager {
   constructor({ scrollContainer, messagesContainer }) {
     this.scrollContainer = scrollContainer;
     this.messagesContainer = messagesContainer;
@@ -23,3 +23,5 @@ export class ScrollManager {
     this.observer?.disconnect();
   }
 }
+
+export { ScrollManager };
