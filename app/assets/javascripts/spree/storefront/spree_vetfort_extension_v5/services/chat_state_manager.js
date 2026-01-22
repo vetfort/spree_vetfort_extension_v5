@@ -1,4 +1,7 @@
-const { STORAGE_KEYS } = window.VetfortDeps.Constants || {};
+const STORAGE_KEYS = {
+  DONT_SHOW_AGAIN: 'dont_show_ai_consultant_cta',
+  CLOSED_FOR_SESSION: 'close_for_this_session'
+};
 
 class ChatStateManager {
   shouldShowHero() {
