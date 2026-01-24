@@ -15,14 +15,14 @@ module LLMAssistants
         property :limit, type: 'integer', required: false, description: 'Max number of products to return (default 5).'
       end
 
-      def semantic_search(query:)
+      def semantic_search(query:, limit: 5)
         return JSON.generate([]) if query.to_s.strip.blank?
 
         query_embedding = embed_query(query)
         return JSON.generate([]) if query_embedding.blank?
 
         products = nearest_products(query_embedding)
-          .take(5)
+          .take(limit)
           .map { |product| serialize_product(product) }
 
         JSON.generate(products)
