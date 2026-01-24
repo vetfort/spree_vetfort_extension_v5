@@ -4,18 +4,29 @@ module SpreeVetfortExtensionV5
     isolate_namespace Spree
     engine_name 'spree_vetfort_extension_v5'
 
+    initializer "spree_vetfort_extension_v5.importmap", before: "importmap" do |app|
+      app.config.importmap.paths << root.join("config/importmap.rb")
+      app.config.importmap.cache_sweepers << root.join("app/javascript")
+    end
+
+    initializer "spree_vetfort_extension_v5.assets" do |app|
+      app.config.assets.paths << root.join("app/javascript")
+    end
+
     initializer 'spree_vetfort_extension_v5.assets.precompile' do |app|
+      app.config.assets.paths << root.join("app/javascript")
+
+      base = root.join("app/javascript").to_s
+
+      engine_js = Dir[root.join("app/javascript/spree_vetfort_extension_v5/**/*.js")].map do |abs|
+        abs.sub("#{base}/", "")
+      end
+
+      app.config.assets.precompile += engine_js
+
       app.config.assets.precompile += %w[
         spree/storefront/spree_vetfort_extension_v5.css
         spree/admin/spree_admin_vetfort_extension_v5.css
-        spree/storefront/spree_vetfort_extension_v5/ai_chat_controller.js
-        spree/storefront/spree_vetfort_extension_v5/ai_chat/hero_controller.js
-        spree/storefront/spree_vetfort_extension_v5/ai_chat/message_history_controller.js
-        spree/storefront/spree_vetfort_extension_v5/ai_chat/form_controller.js
-        spree/storefront/spree_vetfort_extension_v5/constants.js
-        spree/storefront/spree_vetfort_extension_v5/services/api.js
-        spree/storefront/spree_vetfort_extension_v5/services/chat_state_manager.js
-        spree/storefront/spree_vetfort_extension_v5/services/scroll_manager.js
       ]
     end
 

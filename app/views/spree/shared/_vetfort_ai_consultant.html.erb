@@ -1,3 +1,5 @@
 <% if current_user&.email.to_s.downcase.end_with?('@vetfort.md') %>
     <%= render VetfortExtensionV5::AiConsultant::ChatComponent.new(current_user: current_user, cookies: cookies) %>
 <% end %>
+
+<div data-controller="test"></div>
