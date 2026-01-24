@@ -7,7 +7,7 @@ module Decorators
         return unless base.column_names.include?('embedding')
 
         base.has_neighbors :embedding
-        base.after_commit :enqueue_embedding_job, on: %i[create update]
+        base.after_commit :enqueue_embedding_job, on: %i[create]
       rescue StandardError
         # Keep decorator resilient during early boot / migrations.
       end
