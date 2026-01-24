@@ -1,7 +1,4 @@
-const STORAGE_KEYS = {
-  DONT_SHOW_AGAIN: 'dont_show_ai_consultant_cta',
-  CLOSED_FOR_SESSION: 'close_for_this_session'
-};
+import { STORAGE_KEYS } from 'spree_vetfort_extension_v5/constants';
 
 class ChatStateManager {
   shouldShowHero() {

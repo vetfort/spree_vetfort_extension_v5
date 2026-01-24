@@ -1,6 +1,11 @@
 // ai-chat--message-history
 
 import { Controller } from "@hotwired/stimulus";
+import PubSub from 'pubsub-js';
+
+import { TOPICS } from "spree_vetfort_extension_v5/constants";
+import { ScrollManager } from "spree_vetfort_extension_v5/services/scroll_manager";
+import { chatApi } from "spree_vetfort_extension_v5/services/api";
 
 export default class extends Controller {
   static targets = [
@@ -14,7 +19,6 @@ export default class extends Controller {
 
   connect() {
     const hasTargets = this.hasScrollTarget && this.hasMessagesTarget;
-    const { ScrollManager } = window.VetfortDeps.ScrollManager || {};
 
     if (hasTargets) {
       this.scrollManager = new ScrollManager({
@@ -27,15 +31,8 @@ export default class extends Controller {
     this.beforeStreamRenderHandler = this.beforeStreamRender.bind(this);
     document.addEventListener("turbo:before-stream-render", this.beforeStreamRenderHandler);
 
-    const { PubSub } = window.VetfortDeps || {};
-    if (!PubSub) { console.warn("PubSub not loaded"); }
-    this.pubsub = PubSub;
-    const { TOPICS } = window.VetfortDeps.Constants || {};
-
-    if (this.pubsub) {
-      this.messageAppendSubscription = this.pubsub.subscribe(TOPICS.MESSAGE_APPEND, (_, data) => this.appendUserMessage(data.text));
-      this.beginRequestSubscription = this.pubsub.subscribe(TOPICS.BEGIN_REQUEST, () => this.beginRequestHandler());
-    }
+    this.messageAppendSubscription = PubSub.subscribe(TOPICS.MESSAGE_APPEND, (_, data) => this.appendUserMessage(data.text));
+    this.beginRequestSubscription = PubSub.subscribe(TOPICS.BEGIN_REQUEST, () => this.beginRequestHandler());
 
     this.visibilityObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -62,15 +59,13 @@ export default class extends Controller {
 
   disconnect() {
     this.scrollManager?.disconnect();
-    this.pubsub?.unsubscribe?.(this.messageAppendSubscription);
-    this.pubsub?.unsubscribe?.(this.beginRequestSubscription);
+    PubSub.unsubscribe(this.messageAppendSubscription);
+    PubSub.unsubscribe(this.beginRequestSubscription);
     document.removeEventListener("turbo:before-stream-render", this.beforeStreamRenderHandler);
     this.visibilityObserver.disconnect();
   }
 
   getCurrentConversation() {
-    const { chatApi } = window.VetfortDeps.Api || {};
-
     chatApi.getActiveConversation().then(response => {
       if (!response) return;
       if (response.ok) {

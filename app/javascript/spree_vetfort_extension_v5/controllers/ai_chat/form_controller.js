@@ -1,6 +1,7 @@
 // ai-chat--form
 
 import { Controller } from "@hotwired/stimulus";
+import PubSub from 'pubsub-js';
 
 export default class extends Controller {
   static targets = [
@@ -14,10 +15,6 @@ export default class extends Controller {
     if (this.hasPathTarget) {
       this.pathTarget.value = window.location.pathname + window.location.search;
     }
-
-    const { PubSub } = window.VetfortDeps || {};
-    if (!PubSub) { console.warn("PubSub not loaded"); }
-    this.pubsub = PubSub;
 
     this.keydownHandler = this.keydownHandler.bind(this);
 
@@ -46,8 +43,8 @@ export default class extends Controller {
       return;
     }
 
-    this.pubsub.publish(TOPICS.MESSAGE_APPEND, { text });
-    this.pubsub.publish(TOPICS.BEGIN_REQUEST);
+    PubSub.publish(TOPICS.MESSAGE_APPEND, { text });
+    PubSub.publish(TOPICS.BEGIN_REQUEST);
 
     setTimeout(() => {
       this.inputTarget.value = "";

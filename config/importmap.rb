@@ -3,7 +3,7 @@ pin "@hotwired/stimulus", to: "stimulus.min.js"
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 # pin Rails request JS (currently missing in the host)
 pin "@rails/request.js", to: "@rails/request.js"
-
+pin "pubsub-js" # @1.9.5
 pin "spree_vetfort_extension_v5/storefront", to: "spree_vetfort_extension_v5/storefront.js", preload: true
 
 # engine modules

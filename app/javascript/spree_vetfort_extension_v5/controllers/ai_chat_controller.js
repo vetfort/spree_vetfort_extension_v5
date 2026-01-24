@@ -1,4 +1,9 @@
 import { Controller } from "@hotwired/stimulus";
+import PubSub from 'pubsub-js';
+
+import { TOPICS } from "spree_vetfort_extension_v5/constants";
+import { ChatStateManager } from "spree_vetfort_extension_v5/services/chat_state_manager";
+import { chatApi } from "spree_vetfort_extension_v5/services/api";
 
 export default class extends Controller {
   static targets = [
@@ -9,31 +14,21 @@ export default class extends Controller {
   ];
 
   connect() {
-    const { TOPICS } = window.VetfortDeps.Constants || {};
-    const { ChatStateManager } = window.VetfortDeps.ChatStateManager || {};
-    const { chatApi } = window.VetfortDeps.ChatApi || {};
-
     this.stateManager = new ChatStateManager();
     this.openInitialComponent();
     this.subscribeToPubSub();
-    this.TOPICS = TOPICS;
-    this.chatApi = chatApi;
   }
 
   subscribeToPubSub() {
-    const { PubSub } = window.VetfortDeps || {};
-    if (!PubSub) { console.warn("PubSub not loaded"); }
-    this.pubsub = PubSub;
-
-    this.closeHeroCtaSubscription = this.pubsub.subscribe(this.TOPICS.CLOSE_HERO_CTA, () => this.closeHeroCta());
-    this.suggestionsClickSubscription = this.pubsub.subscribe(this.TOPICS.SUGGESTIONS_CLICK, (_, data) => this.suggestionsClick(data));
-    this.heroInputClickSubscription = this.pubsub.subscribe(this.TOPICS.HERO_INPUT_CLICK, () => this.heroInputClick());
+    this.closeHeroCtaSubscription = PubSub.subscribe(TOPICS.CLOSE_HERO_CTA, () => this.closeHeroCta());
+    this.suggestionsClickSubscription = PubSub.subscribe(TOPICS.SUGGESTIONS_CLICK, (_, data) => this.suggestionsClick(data));
+    this.heroInputClickSubscription = PubSub.subscribe(TOPICS.HERO_INPUT_CLICK, () => this.heroInputClick());
   }
 
   unsubscribeFromPubSub() {
-    this.pubsub.unsubscribe(this.closeHeroCtaSubscription);
-    this.pubsub.unsubscribe(this.suggestionsClickSubscription);
-    this.pubsub.unsubscribe(this.heroInputClickSubscription);
+    PubSub.unsubscribe(this.closeHeroCtaSubscription);
+    PubSub.unsubscribe(this.suggestionsClickSubscription);
+    PubSub.unsubscribe(this.heroInputClickSubscription);
   }
 
   disconnect() {
@@ -42,7 +37,7 @@ export default class extends Controller {
 
   suggestionsClick(data) {
     this.toggleDialog();
-    this.pubsub.publish(this.TOPICS.MESSAGE_APPEND, { text: data });
+    PubSub.publish(TOPICS.MESSAGE_APPEND, { text: data });
     this.beginRequest(data);
     this.closeHeroCta();
   }
@@ -70,10 +65,10 @@ export default class extends Controller {
     if (this.abortController) this.abortController.abort();
     this.abortController = new AbortController();
 
-    this.pubsub.publish(this.TOPICS.BEGIN_REQUEST);
+    PubSub.publish(TOPICS.BEGIN_REQUEST);
 
     try {
-      await this.chatApi.sendMessage(message, {
+      await chatApi.sendMessage(message, {
         signal: this.abortController.signal,
         path: window.location.pathname
       });
